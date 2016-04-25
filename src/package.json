@@ -1,0 +1,17 @@
+{
+  "name": "vessel-calculators",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateuszRybczonek/vessel-calculators-v2"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
