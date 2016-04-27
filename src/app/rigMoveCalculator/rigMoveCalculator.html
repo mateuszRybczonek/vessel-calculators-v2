@@ -22,22 +22,22 @@
         <div class="well well-md">
           <div class="input-group name-WPT">
             <span class="input-group-addon">Name: &nbsp &nbsp</span>
-            <input type="text" size="40" name="nameWPT"
+            <input ng-model="nameWPT" type="text" size="40" name="nameWPT"
                    class="form-control" placeholder="">
           </div>
           <div class="input-group WPT-easting">
             <span class="input-group-addon">Easting: &nbsp</span>
-            <input type="text" size="40" name="WPTEasting"
+            <input ng-model="WPTEasting" type="text" size="40" name="WPTEasting"
                    class="form-control" placeholder="">
             <span class="input-group-addon">[m]</span>
           </div>
           <div class="input-group WPT-northing">
             <span class="input-group-addon">Northing:</span>
-            <input type="text" size="40" name="WPTNorthing"
+            <input ng-model="WPTNorthing" type="text" size="40" name="WPTNorthing"
                    class="form-control" placeholder="">
             <span class="input-group-addon">[m]</span>
           </div>
-          <button name="add-new-WPT" type="button"
+          <button ng-click = "addNewWPT(nameWPT,WPTEasting,WPTNorthing)" name="add-new-WPT" type="button"
                   class="btn btn-default btn-gray">Add new WPT
           </button>
           <button name="insert-WPT" type="button"
@@ -54,14 +54,19 @@
     </div>
   </header>
 
-  <table class="table col-xs-11 tableWPT">
+  <table class="table tableWPT">
     <thead>
     <tr>
       <th ng-repeat="tableHeader in WPTTableHeaders" class="col-xs-1" scope="col">{{tableHeader}}</th>
     </tr>
     </thead>
     <tbody>
-
+      <tr ng-repeat="WPT in WPTS">
+        <td>{{WPT.index}}</td>
+        <td>{{WPT.name}}</td>
+        <td>{{WPT.easting}}</td>
+        <td>{{WPT.northing}}</td>
+      </tr>
     </tbody>
   </table>
 

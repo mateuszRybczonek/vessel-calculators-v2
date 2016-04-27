@@ -13,23 +13,28 @@
 }
 
 #calculate .input-group {
-  margin: 10px ;
+  margin: 10px;
 }
 
 .waypoint-data .input-group {
   margin: 10px 0;
 }
 
-.waypoint-data{
+.waypoint-data {
   margin-top: 20px;
   width: 300px;
 }
 
-.input-group.projected-speed {
-  width:250px;
+.table.tableWPT {
+  width: 95%;
 }
+
+.input-group.projected-speed {
+  width: 250px;
+}
+
 .input-group.track-name {
-  width:250px;
+  width: 250px;
 }
 
 #canvas {
