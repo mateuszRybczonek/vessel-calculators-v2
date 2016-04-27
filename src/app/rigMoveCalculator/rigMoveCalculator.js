@@ -10,7 +10,7 @@ function rigMoveCalculator() {
 
 function rigMoveController($scope) {
   $scope.isCollapsedWaypoint = false;
-  var WPTTableHeaders = ['WPT no.',
+  $scope.WPTTableHeaders = ['WPT no.',
     'WPT name',
     'Coordinate Easting [m]',
     'Coordinate Northing [m]',
@@ -19,5 +19,13 @@ function rigMoveController($scope) {
     'Distance remaining [m]',
     'Time leg',
     'Time remaining',
-    'Selected']
+    'Selected'];
+
+  $scope.WPT = WPT;
+}
+
+function WPT(name, easting, northing) {
+  this.name = name;
+  this.easting = easting;
+  this.northing = northing;
 }

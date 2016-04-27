@@ -3,7 +3,7 @@
   color: #FFF;
   font-weight: bold;
   transition: all 500ms ease;
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .btn-waypoint {
@@ -31,15 +31,6 @@
 .input-group.track-name {
   width:250px;
 }
-
-#timeCol {
-  min-width: 80px;
-}
-
-.noCol {
-  text-align: center;
-}
-
 
 #canvas {
   border: 2px solid gray;
