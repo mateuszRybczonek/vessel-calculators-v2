@@ -127,13 +127,16 @@
   margin: 0;
 }
 
+#page-content-wrapper {
+  position: absolute;
+  padding: 15px;
+  margin-left: 80px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
 /*MEDIA QUERIES*/
 @media (min-width: 768px) {
-
-  #wrapper {
-    padding-left: 80px;
-  }
-
   .collapseMenu {
     display: none;
   }
@@ -150,9 +153,8 @@
   }
 }
 
-#page-content-wrapper {
-  position: absolute;
-  padding: 15px;
-  width: 90%;
-  overflow-x: hidden;
+@media (max-width: 767px) {
+  #page-content-wrapper {
+    margin-left: 0;
+  }
 }

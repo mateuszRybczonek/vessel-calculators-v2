@@ -1,3 +1,11 @@
+function mainFrame(){
+  return {
+    restrict: "E",
+    templateUrl: "mainFrame/mainFrame.html",
+    controller: mainController
+  }
+}
+
 function mainController($scope) {
   $scope.accordion = 0;
   $scope.tab = 1;

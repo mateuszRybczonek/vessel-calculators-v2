@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default no-margin">
+  <div class="navbar-header fixed-brand">
+    <a class="navbar-brand" href="../index.html">
+      <img src="../indexImages/mainIconRig.png"><span class="page-title">Vessel Calculators</span>
+    </a>
+    <div class="container">
+      <button type="button" class="btn btn-default navbar-toggle collapsed"
+              ng-click="isCollapsed = !isCollapsed">
+        <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+      </button>
+      <div uib-collapse="isCollapsed" class="collapseMenu">
+        <div class="well well-lg collapseMenu">
+
+          <button ng-class="{active:ifTabSelected(1)}"
+                  ng-click=selectTab(1) type="button"
+                  class="btn btn-default btn-lg button-topbar" aria-label="Left Align">
+            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+            &nbsp Rig Move Calculator
+          </button>
+
+          <button ng-class="{active:ifTabSelected(2)}"
+                  ng-click=selectTab(2) type="button"
+                  class="btn btn-default btn-lg button-topbar" aria-label="Left Align">
+            <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+            &nbsp LBL Array Planning
+          </button>
+
+          <button ng-class="{active:ifTabSelected(3)}"
+                  ng-click=selectTab(3) type="button"
+                  class="btn btn-default btn-lg button-topbar" aria-label="Left Align">
+            <span class="glyphicon glyphicon-random" aria-hidden="true"></span>
+            &nbsp TAT Verification
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="sidebar-wrapper">
+
+  <button ng-class="{active:ifTabSelected(1)}"
+          ng-click=selectTab(1) type="button"
+          class="btn btn-default btn-lg button-sidebar"
+          aria-label="Left Align">
+      <span class="glyphicon glyphicon-list-alt"
+            aria-hidden="true"></span>
+  </button>
+
+  <button ng-class="{active:ifTabSelected(2)}"
+          ng-click=selectTab(2) type="button"
+          class="btn btn-default btn-lg button-sidebar"
+          aria-label="Left Align">
+      <span class="glyphicon glyphicon-record"
+            aria-hidden="true"></span>
+  </button>
+
+  <button ng-class="{active:ifTabSelected(3)}"
+          ng-click=selectTab(3) type="button"
+          class="btn btn-default btn-lg button-sidebar"
+          aria-label="Left Align">
+      <span class="glyphicon glyphicon-random"
+            aria-hidden="true"></span>
+  </button>
+</div>
