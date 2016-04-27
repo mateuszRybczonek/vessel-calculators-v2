@@ -1,0 +1,13 @@
+body {
+  font: 14px Arial;
+  min-width: 320px;
+}
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+a:hover {
+  text-decoration: none;
+}

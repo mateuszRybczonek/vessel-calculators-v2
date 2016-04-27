@@ -1,0 +1,158 @@
+/*NAVBAR*/
+
+.navbar {
+  z-index: 100;
+  width: 100%;
+  border-radius: 0;
+}
+
+.navbar .well.well-lg.collapseMenu {
+  background-color: #000;
+}
+
+.navbar .fixed-brand {
+  width: auto;
+}
+
+.navbar .collapseMenu {
+  width: 300px;
+  position: absolute;
+  right: 15px;
+  top: 22px;
+  font: 14px Arial;
+}
+
+.navbar-toggle {
+  background-color: #000;
+  width: 40px;
+  color: #FFF;
+  transition: all 300ms ease-out;
+  margin-right: 0;
+}
+
+.page-title {
+  position: absolute;
+  top: 15px;
+  left: 70px;
+}
+
+.navbar-brand {
+  padding: 5px 0 5px 20px;
+}
+
+.navbar-brand > img {
+  height: 40px;
+}
+
+.navbar-toggle:hover {
+  transform: rotateZ(180deg);
+}
+
+.button-topbar {
+  width: 250px;
+  text-align: left;
+  transition: all 600ms ease-out;
+}
+
+.button-topbar:hover {
+  background-color: #000;
+  opacity: 0.8;
+  color: #FFF;
+}
+
+.button-topbar.active {
+  background-color: #000;
+  opacity: 0.8;
+  color: #FFF;
+}
+
+/* SIDEBAR */
+#wrapper {
+  padding-left: 0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  overflow: hidden;
+}
+
+#wrapper.toggled {
+  padding-left: 250px;
+  overflow: scroll;
+}
+
+#sidebar-wrapper {
+  z-index: 99;
+  position: absolute;
+  top: 0;
+  left: 50px;
+  width: 0;
+  height: 100%;
+  margin-left: -50px;
+  overflow-y: auto;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  background-color: #000;
+  box-shadow: 5px 2px 3px 0 rgba(0, 0, 0, 0.55);
+  font: 13px Arial;
+  text-align: center;
+  padding-top: 52px;
+}
+
+#sidebar-wrapper button {
+  box-shadow: 0 0 10px 0 #000;
+  border-radius: 10px;
+  margin: 10px auto;
+  background-color: #f8f8f8;
+  transition: all 600ms ease-out;
+  border: solid 2px #838383;
+}
+
+#sidebar-wrapper button:hover {
+  background-color: #8d8d8d;
+  color: #FFF;
+  border-color: #fff;
+}
+
+#sidebar-wrapper .active {
+  transform: rotateY(180deg);
+  background-color: #373737;
+  color: #FFF;
+  border-color: #fff;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+/*MEDIA QUERIES*/
+@media (min-width: 768px) {
+
+  #wrapper {
+    padding-left: 80px;
+  }
+
+  .collapseMenu {
+    display: none;
+  }
+
+  #sidebar-wrapper {
+    width: 80px;
+  }
+
+  #page-content-wrapper {
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+  }
+}
+
+#page-content-wrapper {
+  position: absolute;
+  padding: 15px;
+  width: 90%;
+  overflow-x: hidden;
+}
