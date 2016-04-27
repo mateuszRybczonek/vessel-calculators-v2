@@ -8,25 +8,18 @@
   <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../bower_components/angular-bootstrap/ui-bootstrap-csp.css">
   <link href="styles/app.css" rel="stylesheet">
-  <link href="styles/mainFrame.css" rel="stylesheet">
+  <link href="mainFrame/mainFrame.css" rel="stylesheet">
+  <link href="rigMoveCalculator/rigMoveCalculator.css" rel="stylesheet">
+  <link href="LBLArrayPlanning/lblArrayPlanning.css" rel="stylesheet">
+  <link href="TATVerification/tatVerification.css" rel="stylesheet">
 </head>
 <body>
 <main-frame></main-frame>
-<!-- CONTENT -->
 <div id="page-content-wrapper">
-  <div class="panel container-fluid" ng-show=ifTabSelected(1)>
-    <span>Rig Move Calculator</span>
-  </div>
-
-  <div class="panel container-fluid" ng-show=ifTabSelected(2)>
-    <span>LBL Array Planning</span>
-  </div>
-
-  <div class="panel container-fluid" ng-show=ifTabSelected(3)>
-    <span>TAT Verification</span>
-  </div>
+  <rig-move-calculator></rig-move-calculator>
+  <lbl-array-planning></lbl-array-planning>
+  <tat-verification></tat-verification>
 </div>
-<!-- CONTENT END-->
 <script src="../bower_components/jquery/dist/jquery.min.js"></script>
 <script src="../bower_components/angular/angular.min.js"></script>
 <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
@@ -36,6 +29,9 @@
 <script src="../bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
 <script src="mainFrame/mainFrame.js"></script>
 <script src="mainFrame/resizeSidebar.js"></script>
+<script src="rigMoveCalculator/rigMoveCalculator.js"></script>
+<script src="LBLArrayPlanning/lblArrayPlanning.js"></script>
+<script src="TATVerification/tatVerification.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

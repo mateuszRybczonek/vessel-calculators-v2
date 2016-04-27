@@ -108,12 +108,14 @@
   background-color: #f8f8f8;
   transition: all 600ms ease-out;
   border: solid 2px #838383;
+  border-radius: 30px;
 }
 
 #sidebar-wrapper button:hover {
   background-color: #8d8d8d;
   color: #FFF;
   border-color: #fff;
+  border-radius: 10px;
 }
 
 #sidebar-wrapper .active {
@@ -121,6 +123,7 @@
   background-color: #373737;
   color: #FFF;
   border-color: #fff;
+  border-radius: 10px;
 }
 
 .no-margin {

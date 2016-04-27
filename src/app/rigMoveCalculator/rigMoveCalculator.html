@@ -1,0 +1,111 @@
+<div class="panel container-fluid" ng-show=ifTabSelected(1)>
+  <header>
+    <h1>Rig Move Calculator</h1>
+    <div id="calculate" class = "col-md-5 col-lg-4">
+      <div class="input-group track-name">
+        <span class="input-group-addon">Track name:</span>
+        <input type="text" size="40" name="trackName"
+               class="form-control" placeholder="enter track name">
+      </div>
+      <div class="input-group projected-speed">
+        <span class="input-group-addon">Projected speed:</span>
+        <input type="text" size="4" name="projectedSpeed"
+               class="form-control" placeholder="">
+        <span class="input-group-addon">[kn]</span>
+      </div>
+      <button id="bCalculate" name="bCalculate" type="button" class="btn btn-default btn-gray">Calculate</button>
+      <button id="bRemoveRow" name="bRemoveRow" type="button" class="btn btn-default btn-gray">Remove selected row</button>
+      <button id="bClearTable" name="bClearTable" type="button" class="btn btn-default btn-gray">Clear table</button>
+    </div>
+    <div class="waypoint-data col-sm-push-2 col-sm-5 col-lg-push-4">
+      <button type="button" class="btn btn-default btn-gray btn-waypoint"
+              ng-click="isCollapsedWaypoint = !isCollapsedWaypoint">Waypoint data
+      </button>
+      <div uib-collapse="isCollapsedWaypoint">
+        <div class="well well-md">
+          <div class="input-group name-WPT">
+            <span class="input-group-addon">Name: &nbsp &nbsp</span>
+            <input type="text" size="40" name="nameWPT"
+                   class="form-control" placeholder="">
+          </div>
+          <div class="input-group WPT-easting">
+            <span class="input-group-addon">Easting: &nbsp</span>
+            <input type="text" size="40" name="WPTEasting"
+                   class="form-control" placeholder="">
+            <span class="input-group-addon">[m]</span>
+          </div>
+          <div class="input-group WPT-northing">
+            <span class="input-group-addon">Northing:</span>
+            <input type="text" size="40" name="WPTNorthing"
+                   class="form-control" placeholder="">
+            <span class="input-group-addon">[m]</span>
+          </div>
+          <button id="bAddNewRow" name="bAddNewRow" type="button"
+                  class="btn btn-default btn-gray">Add new WPT</button>
+          <button id="bInsertWPT" name="bInsertWPT" type="button"
+                  class="btn btn-default btn-gray">Insert after selected row</button>
+          <button id="bReadRow" name="bReadRow" type="button"
+                  class="btn btn-default btn-gray">Read selected row</button>
+          <button id="bUpdateRow" name="bUpdateRow" type="button"
+                  class="btn btn-default btn-gray">Update selected row</button>
+        </div>
+      </div>
+    </div>
+  </header>
+        <table class="col-xs-11 tableWPT">
+          <thead>
+          <tr>
+            <th class="col-xs-1" scope="col">WPT no.</th>
+            <th class="col-xs-1" scope="col">WPT name</th>
+            <th class="col-xs-1" scope="col">Coordinate Easting [m]</th>
+            <th class="col-xs-1" scope="col">Coordinate Northing [m]</th>
+            <th class="col-xs-1" scope="col">Distance leg [m]</th>
+            <th class="col-xs-1" scope="col">Distance done [m]</th>
+            <th class="col-xs-1" scope="col">Distance remaining [m]</th>
+            <th class="col-xs-1" scope="col">Time leg</th>
+            <th class="col-xs-1" scope="col">Time remaining</th>
+            <th class="col-xs-1" id="selected" scope="col">Selected</th>
+          </tr>
+          </thead>
+          <tbody id="table">
+          </tbody>
+        </table>
+
+        <div id="exportCSV" class="importExportCSV">
+
+                <input id="bExportCSV" class="bImportExportCSV" type=button name="doCSV"
+                       value="Export to *.csv"/>
+        </div>
+        <div class="importExportCSV">
+
+                <input id="fileInput" type="file" name="csvFile"/>
+                <input class="bImportExportCSV" id="bLoadFromCSV" type=button name="loadFromCSV"
+                       value="Import from *.csv"/>
+
+  <table id="canvasGroup">
+    <tr>
+      <td>
+        <canvas id="canvas" width="600px" height="600px"></canvas>
+        <label id="eastingFrameCanvas"></label>
+        <label id="northingFrameCanvas"></label>
+      </td>
+      <td id="canvasEnlarge">
+        <canvas id="canvasEnlarge1" width="400px" height="285px"></canvas>
+        <canvas id="canvasEnlarge2" width="400px" height="285px"></canvas>
+      </td>
+    </tr>
+  </table>
+  <script src="js/calculate.js"></script>
+  <script src="js/addRow.js"></script>
+  <script src="js/doCSV.js"></script>
+  <script src="js/loadFromCSV.js"></script>
+  <script src="js/clearTable.js"></script>
+  <script src="js/removeSelectedRow.js"></script>
+  <script src="js/addNewRowInside.js"></script>
+  <script src="js/drawing.js"></script>
+  <script src="js/updateRow.js"></script>
+  <script src="js/colorCodeTable.js"></script>
+  <script src="js/getCoordinates.js"></script>
+  <script src="js/resize.js"></script>
+  <script src="js/readWPT.js"></script>
+</div>
