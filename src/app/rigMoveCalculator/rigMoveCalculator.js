@@ -27,6 +27,9 @@ function rigMoveController($scope) {
   $scope.addNewWPT = addNewWPT;
   $scope.exportToJSON = exportToJSON;
   $scope.importFromJSON = importFromJSON;
+  $scope.clearTable = clearTable;
+  $scope.readWPT = readWPT;
+  $scope.updateSelectedRow = updateSelectedRow;
 
   function WPT(name, easting, northing, index) {
     this.name = name;
@@ -87,5 +90,40 @@ function rigMoveController($scope) {
       $scope.$apply();
     }
   }
+
+  function clearTable() {
+    $scope.WPTS = [];
+    $scope.apply();
+  }
+
+  function readWPT() {
+    var tableWPT = $(".tableWPT")[0];
+    var rowCount = tableWPT.rows.length;
+    for (var row = 0; row < rowCount; row++) {
+      if (tableWPT.rows[row].cells[9].firstChild.checked == 1) {
+        for (var iteration = 1; iteration < 4; iteration++) {
+          newText = tableWPT.rows[row].cells[iteration].innerHTML;
+          var item = $(".WPT-data input");
+          item[iteration - 1].value = newText;
+        }
+      }
+    }
+  }
+
+  function updateSelectedRow(name, easting, northing) {
+    var selectedIndex;
+    var tableWPT = $(".tableWPT")[0];
+    var rowCount = tableWPT.rows.length;
+
+    for (var row = 0; row < rowCount; row++) {
+      if (tableWPT.rows[row].cells[9].firstChild.checked == 1) {
+        selectedIndex = row-1;
+      }
+    }
+    var updatedWPT = new WPT(name, easting, northing, selectedIndex+1);
+    $scope.WPTS[selectedIndex] = updatedWPT;
+  }
 }
+
+
 

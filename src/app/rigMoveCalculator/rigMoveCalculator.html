@@ -18,7 +18,7 @@
       <button type="button" class="btn btn-default btn-gray btn-waypoint"
               ng-click="isCollapsedWaypoint = !isCollapsedWaypoint">Waypoint data
       </button>
-      <div uib-collapse="isCollapsedWaypoint">
+      <div uib-collapse="isCollapsedWaypoint" class="WPT-data">
         <div class="well well-md">
           <div class="input-group name-WPT">
             <span class="input-group-addon">Name: &nbsp &nbsp</span>
@@ -43,10 +43,10 @@
           <button name="insert-WPT" type="button"
                   class="btn btn-default btn-gray">Insert after selected row
           </button>
-          <button name="read-WPT" type="button"
+          <button ng-click="readWPT()" name="read-WPT" type="button"
                   class="btn btn-default btn-gray">Read selected row
           </button>
-          <button name="update-WPT" type="button"
+          <button ng-click="updateSelectedRow(nameWPT, WPTEasting, WPTNorthing)" name="update-WPT" type="button"
                   class="btn btn-default btn-gray">Update selected row
           </button>
         </div>
@@ -66,6 +66,12 @@
         <td>{{WPT.name}}</td>
         <td>{{WPT.easting}}</td>
         <td>{{WPT.northing}}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td class="selected"><input type="checkbox"></td>
       </tr>
     </tbody>
   </table>
@@ -74,7 +80,7 @@
     <div class="col-xs-12 col-sm-5">
       <button type="button" class="btn btn-default btn-gray">Calculate</button>
       <button type="button" class="btn btn-default btn-gray">Remove selected row</button>
-      <button type="button" class="btn btn-default btn-gray">Clear table</button>
+      <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
     </div>
     <div class="col-xs-12 col-sm-push-2 col-sm-4">
       <input class="btn btn-default btn-gray" id="select-file" type="file" accept="application/json">
@@ -97,13 +103,8 @@
       </tr>
     </table>
     <script src="js/calculate.js"></script>
-    <script src="js/loadFromCSV.js"></script>
-    <script src="js/clearTable.js"></script>
     <script src="js/removeSelectedRow.js"></script>
     <script src="js/addNewRowInside.js"></script>
     <script src="js/drawing.js"></script>
-    <script src="js/updateRow.js"></script>
-    <script src="js/colorCodeTable.js"></script>
     <script src="js/getCoordinates.js"></script>
-    <script src="js/readWPT.js"></script>
   </div>
