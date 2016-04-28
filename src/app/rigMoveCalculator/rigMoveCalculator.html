@@ -71,20 +71,19 @@
   </table>
 
   <div class="btn-group col-xs-12" uib-dropdown>
-    <button id="btn-append-to-single-button" type="button" class="btn btn-default btn-gray" uib-dropdown-toggle>
-      Import / Export <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="btn-append-to-single-button">
-      <li role="menuitem"><a href="#">Import JSON</a></li>
-      <li role="menuitem"><a href="#">Export as JSON</a></li>
-    </ul>
-    <button id="bCalculate" name="bCalculate" type="button" class="btn btn-default btn-gray">Calculate</button>
-    <button id="bRemoveRow" name="bRemoveRow" type="button" class="btn btn-default btn-gray">Remove selected row
-    </button>
-    <button id="bClearTable" name="bClearTable" type="button" class="btn btn-default btn-gray">Clear table</button>
+    <div class="col-xs-12 col-sm-5">
+      <button type="button" class="btn btn-default btn-gray">Calculate</button>
+      <button type="button" class="btn btn-default btn-gray">Remove selected row</button>
+      <button type="button" class="btn btn-default btn-gray">Clear table</button>
+    </div>
+    <div class="col-xs-12 col-sm-push-2 col-sm-4">
+      <input class="btn btn-default btn-gray" id="select-file" type="file" accept="application/json">
+      <button class="btn btn-default btn-gray" ng-click="importFromJSON()" role="menuitem">Import JSON</button>
+      <button class="btn btn-default btn-gray" ng-click="exportToJSON()" role="menuitem">Export as JSON</button>
+    </div>
   </div>
 
-    <table id="canvasGroup">
+  <table id="canvasGroup">
       <tr>
         <td>
           <canvas id="canvas" width="600px" height="600px"></canvas>
@@ -98,8 +97,6 @@
       </tr>
     </table>
     <script src="js/calculate.js"></script>
-    <script src="js/addRow.js"></script>
-    <script src="js/doCSV.js"></script>
     <script src="js/loadFromCSV.js"></script>
     <script src="js/clearTable.js"></script>
     <script src="js/removeSelectedRow.js"></script>
@@ -108,6 +105,5 @@
     <script src="js/updateRow.js"></script>
     <script src="js/colorCodeTable.js"></script>
     <script src="js/getCoordinates.js"></script>
-    <script src="js/resize.js"></script>
     <script src="js/readWPT.js"></script>
   </div>
