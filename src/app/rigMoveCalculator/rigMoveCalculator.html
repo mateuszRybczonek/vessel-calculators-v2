@@ -5,12 +5,12 @@
       <div class="input-group track-name">
         <span class="input-group-addon">Track name:</span>
         <input type="text" size="40" name="trackName"
-               class="form-control" placeholder="enter track name">
+               class="form-control track-name-input" placeholder="enter track name">
       </div>
       <div class="input-group projected-speed">
         <span class="input-group-addon">Projected speed:</span>
         <input type="text" size="4" name="projectedSpeed"
-               class="form-control" placeholder="">
+               class="form-control projected-speed-input" placeholder="">
         <span class="input-group-addon">[kn]</span>
       </div>
     </div>
@@ -61,7 +61,7 @@
     </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="WPT in WPTS">
+      <tr ng-repeat="WPT in WPTS track by $index">
         <td>{{WPT.index}}</td>
         <td>{{WPT.name}}</td>
         <td>{{WPT.easting}}</td>

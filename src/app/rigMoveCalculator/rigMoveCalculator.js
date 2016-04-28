@@ -44,7 +44,7 @@ function rigMoveController($scope) {
   function exportToJSON() {
     $scope.track.trackName = $('.track-name input')[0].value;
     $scope.track.projectedSpeed = $('.projected-speed input')[0].value;
-    $scope.track.WPTS = $scope.WPTS;
+    $scope.track.WPTJSON = $scope.WPTJSON;
     var exportData = JSON.stringify($scope.track);
     console.log(exportData);
     //create default file name
@@ -81,7 +81,10 @@ function rigMoveController($scope) {
     function receivedText(e) {
       lines = e.target.result;
       $scope.WPTJSON = JSON.parse(lines);
-      console.log($scope.WPTJSON);
+      $('.track-name-input')[0].value = $scope.WPTJSON.trackName;
+      $('.projected-speed-input')[0].value = $scope.WPTJSON.projectedSpeed;
+      $scope.WPTS = $scope.WPTJSON.WPTS;
+      $scope.$apply();
     }
   }
 }
