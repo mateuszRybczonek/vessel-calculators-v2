@@ -22,6 +22,7 @@ function rigMoveController($scope) {
     'Selected'];
   $scope.WPTS = [];
   $scope.track = {};
+  $scope.selectedIndex = -1;
 
   $scope.WPT = WPT;
   $scope.addNewWPT = addNewWPT;
@@ -30,6 +31,8 @@ function rigMoveController($scope) {
   $scope.clearTable = clearTable;
   $scope.readWPT = readWPT;
   $scope.updateSelectedRow = updateSelectedRow;
+  $scope.removeSelectedRow = removeSelectedRow;
+  $scope.selectRow = selectRow;
 
   function WPT(name, easting, northing, index) {
     this.name = name;
@@ -38,10 +41,13 @@ function rigMoveController($scope) {
     this.index = index;
   }
 
-  function addNewWPT(name, easting, northing) {
-    var newWPT = new WPT(name, easting, northing, $scope.WPTS.length + 1);
+  function addNewWPT() {
+    var WPTDataInputs = $(".WPT-data .form-control");
+    var newWPT = new WPT(WPTDataInputs[0].value,
+      WPTDataInputs[1].value,
+      WPTDataInputs[2].value,
+      $scope.WPTS.length + 1);
     $scope.WPTS.push(newWPT);
-    console.log($scope.WPTS);
   }
 
   function exportToJSON() {
@@ -49,7 +55,6 @@ function rigMoveController($scope) {
     $scope.track.projectedSpeed = $('.projected-speed input')[0].value;
     $scope.track.WPTJSON = $scope.WPTJSON;
     var exportData = JSON.stringify($scope.track);
-    console.log(exportData);
     //create default file name
     var fileName = $scope.track.trackName + "-RigMove";
     var uri = 'data:JSON; charset=utf-8,' + exportData;
@@ -110,19 +115,33 @@ function rigMoveController($scope) {
     }
   }
 
-  function updateSelectedRow(name, easting, northing) {
-    var selectedIndex;
-    var tableWPT = $(".tableWPT")[0];
-    var rowCount = tableWPT.rows.length;
+  function updateSelectedRow() {
+    var WPTDataInputs = $(".WPT-data .form-control");
+    var updatedWPT = new WPT(WPTDataInputs[0].value,
+      WPTDataInputs[1].value,
+      WPTDataInputs[2].value,
+      $scope.selectedIndex + 1);
 
-    for (var row = 0; row < rowCount; row++) {
-      if (tableWPT.rows[row].cells[9].firstChild.checked == 1) {
-        selectedIndex = row-1;
-      }
-    }
-    var updatedWPT = new WPT(name, easting, northing, selectedIndex+1);
-    $scope.WPTS[selectedIndex] = updatedWPT;
+    $scope.WPTS[$scope.selectedIndex] = updatedWPT;
   }
+
+  function removeSelectedRow() {
+    $scope.WPTS.splice($scope.selectedIndex, 1);
+    $scope.WPTS.map(function (WPT, index) {
+      WPT.index = index + 1;
+    });
+    console.log($scope.WPTS);
+
+  }
+
+  function selectRow(WPTIndex) {
+    $scope.selectedIndex = WPTIndex - 1;
+    var selectedRow = $('.tableWPT > tbody > tr')[$scope.selectedIndex];
+    console.log(selectedRow);
+    console.log(selectedRow.childNodes[19].firstChild.checked = 1);
+
+  }
+
 }
 
 

@@ -1,9 +1,10 @@
 /*NAVBAR*/
 
 .navbar {
-  z-index: 100;
+  z-index: 9;
   width: 100%;
   border-radius: 0;
+  position: fixed;
 }
 
 .navbar .well.well-lg.collapseMenu {
@@ -82,8 +83,8 @@
 }
 
 #sidebar-wrapper {
-  z-index: 99;
-  position: absolute;
+  z-index: 8;
+  position: fixed;
   top: 0;
   left: 50px;
   width: 0;
@@ -132,8 +133,8 @@
 
 #page-content-wrapper {
   position: absolute;
-  padding: 15px;
-  margin-left: 80px;
+  padding-left: 100px;
+  padding-top: 80px;
   width: 100%;
   overflow-x: hidden;
 }
@@ -158,6 +159,6 @@
 
 @media (max-width: 767px) {
   #page-content-wrapper {
-    margin-left: 0;
+    padding-left: 0;
   }
 }

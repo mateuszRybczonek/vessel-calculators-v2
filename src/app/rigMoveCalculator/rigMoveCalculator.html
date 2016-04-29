@@ -1,4 +1,4 @@
-<div class="panel container-fluid" ng-show=ifTabSelected(1)>
+<div class="rig-move panel container-fluid" ng-show=ifTabSelected(1)>
   <header>
     <h1>Rig Move Calculator</h1>
     <div id="calculate" class="col-md-5 col-lg-4">
@@ -37,16 +37,13 @@
                    class="form-control" placeholder="">
             <span class="input-group-addon">[m]</span>
           </div>
-          <button ng-click = "addNewWPT(nameWPT,WPTEasting,WPTNorthing)" name="add-new-WPT" type="button"
+          <button ng-click="addNewWPT()" name="add-new-WPT" type="button"
                   class="btn btn-default btn-gray">Add new WPT
           </button>
           <button name="insert-WPT" type="button"
                   class="btn btn-default btn-gray">Insert after selected row
           </button>
-          <button ng-click="readWPT()" name="read-WPT" type="button"
-                  class="btn btn-default btn-gray">Read selected row
-          </button>
-          <button ng-click="updateSelectedRow(nameWPT, WPTEasting, WPTNorthing)" name="update-WPT" type="button"
+          <button ng-click="updateSelectedRow()" name="update-WPT" type="button"
                   class="btn btn-default btn-gray">Update selected row
           </button>
         </div>
@@ -61,50 +58,54 @@
     </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="WPT in WPTS track by $index">
-        <td>{{WPT.index}}</td>
-        <td>{{WPT.name}}</td>
-        <td>{{WPT.easting}}</td>
-        <td>{{WPT.northing}}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td class="selected"><input type="checkbox"></td>
-      </tr>
+    <tr  ng-click="selectRow(WPT.index)" ng-repeat="WPT in WPTS track by $index">
+      <td>{{WPT.index}}</td>
+      <td>{{WPT.name}}</td>
+      <td>{{WPT.easting}}</td>
+      <td>{{WPT.northing}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td class="selected"><input type="checkbox"></td>
+    </tr>
     </tbody>
   </table>
 
-  <div class="btn-group col-xs-12" uib-dropdown>
-    <div class="col-xs-12 col-sm-5">
-      <button type="button" class="btn btn-default btn-gray">Calculate</button>
-      <button type="button" class="btn btn-default btn-gray">Remove selected row</button>
-      <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
-    </div>
-    <div class="col-xs-12 col-sm-push-2 col-sm-4">
-      <input class="btn btn-default btn-gray" id="select-file" type="file" accept="application/json">
-      <button class="btn btn-default btn-gray" ng-click="importFromJSON()" role="menuitem">Import JSON</button>
-      <button class="btn btn-default btn-gray" ng-click="exportToJSON()" role="menuitem">Export as JSON</button>
-    </div>
-  </div>
-
   <table id="canvasGroup">
-      <tr>
-        <td>
-          <canvas id="canvas" width="600px" height="600px"></canvas>
-          <label id="eastingFrameCanvas"></label>
-          <label id="northingFrameCanvas"></label>
-        </td>
-        <td id="canvasEnlarge">
-          <canvas id="canvasEnlarge1" width="400px" height="285px"></canvas>
-          <canvas id="canvasEnlarge2" width="400px" height="285px"></canvas>
-        </td>
-      </tr>
-    </table>
-    <script src="js/calculate.js"></script>
-    <script src="js/removeSelectedRow.js"></script>
-    <script src="js/addNewRowInside.js"></script>
-    <script src="js/drawing.js"></script>
-    <script src="js/getCoordinates.js"></script>
-  </div>
+    <tr>
+      <td>
+        <canvas id="canvas" width="600px" height="600px"></canvas>
+        <label id="eastingFrameCanvas"></label>
+        <label id="northingFrameCanvas"></label>
+      </td>
+      <td id="canvasEnlarge">
+        <canvas id="canvasEnlarge1" width="400px" height="285px"></canvas>
+        <canvas id="canvasEnlarge2" width="400px" height="285px"></canvas>
+      </td>
+    </tr>
+  </table>
+
+  <footer>
+    <div class="btn-group col-xs-12 panel-footer">
+      <div class="col-xs-12">
+        <button type="button" class="btn btn-default btn-gray">Calculate</button>
+        <button ng-click="removeSelectedRow()" type="button" class="btn btn-default btn-gray">Remove selected row</button>
+        <button ng-click="readWPT()" name="read-WPT" type="button"
+                class="btn btn-default btn-gray">Read selected row
+        </button>
+        <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
+
+        <button class="btn btn-default btn-gray import-export" ng-click="exportToJSON()" role="menuitem">Export as JSON</button>
+        <button class="btn btn-default btn-gray import-export" ng-click="importFromJSON()" role="menuitem">Import JSON</button>
+        <input class="btn btn-default btn-gray import-export" id="select-file" type="file" accept="application/json">
+      </div>
+    </div>
+
+  </footer>
+  <script src="js/calculate.js"></script>
+  <script src="js/addNewRowInside.js"></script>
+  <script src="js/drawing.js"></script>
+  <script src="js/getCoordinates.js"></script>
+</div>

@@ -26,7 +26,7 @@
 }
 
 .table.tableWPT {
-  width: 95%;
+  width: 100%;
 }
 
 .input-group.projected-speed {
@@ -61,4 +61,18 @@
   margin-top: 20px;
   display: block;
   background-color: #F8F7FF;
+}
+
+.rig-move .panel-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  width: 100%;
+  z-index: 9;
+  min-height: 60px;
+}
+
+.rig-move .import-export {
+  float: right;
 }
