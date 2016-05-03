@@ -67,19 +67,17 @@
   </table>
   <span ng-click="addNewWPT()" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right"> ADD</span>
   <span class="clear"></span>
-  <table id="canvasGroup">
-    <tr>
-      <td>
-        <canvas id="canvas" width="600px" height="600px"></canvas>
+  <div id="canvasGroup" class="col-xs-12">
+      <div class="col-xs-12 col-lg-6">
+        <canvas class="canvas" width="600px" height="580px"></canvas>
         <label id="eastingFrameCanvas"></label>
         <label id="northingFrameCanvas"></label>
-      </td>
-      <td id="canvasEnlarge">
-        <canvas id="canvasEnlarge1" width="400px" height="285px"></canvas>
-        <canvas id="canvasEnlarge2" width="400px" height="285px"></canvas>
-      </td>
-    </tr>
-  </table>
+      </div>
+      <div class="col-xs-push-1 col-xs-10 col-md-push-1 col-lg-5">
+        <canvas class="canvas small-canvas-1" width="400px" height="285px"></canvas>
+        <canvas class="canvas small-canvas-2" width="400px" height="285px"></canvas>
+      </div>
+  </div>
 
   <footer>
     <div class="btn-group col-xs-12 panel-footer">
@@ -97,6 +95,5 @@
     </div>
 
   </footer>
-  <script src="js/drawing.js"></script>
   <script src="js/getCoordinates.js"></script>
 </div>

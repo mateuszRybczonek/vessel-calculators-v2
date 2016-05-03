@@ -87,33 +87,13 @@
   width: 250px;
 }
 
-#canvas {
-  border: 2px solid gray;
-  border-radius: 10px;
-  margin-left: 1%;
-  margin-top: 20px;
-  background-color: #F8F7FF;
-}
-
 #canvasGroup {
-  margin-top: 50px;
+  margin-top: 20px;
+  margin-bottom: 70px;
 }
 
-#canvasEnlarge1 {
+.canvas {
   border: 2px solid gray;
-  border-radius: 10px;
-  margin-left: 10%;
-  margin-top: 20px;
-  display: block;
-  background-color: #F8F7FF;
-}
-
-#canvasEnlarge2 {
-  border: 2px solid gray;
-  border-radius: 10px;
-  margin-left: 10%;
-  margin-top: 20px;
-  display: block;
   background-color: #F8F7FF;
 }
 
@@ -127,6 +107,15 @@
   min-height: 60px;
 }
 
+.rig-move {
+  margin-top: -30px;
+  margin-bottom: 0;
+}
+
 .rig-move .import-export {
   float: right;
+}
+
+.panel-footer {
+  border-top: solid 2px gray;
 }
