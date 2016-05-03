@@ -43,9 +43,6 @@
           <button name="insert-WPT" type="button"
                   class="btn btn-default btn-gray">Insert after selected row
           </button>
-          <button ng-click="updateSelectedRow()" name="update-WPT" type="button"
-                  class="btn btn-default btn-gray">Update selected row
-          </button>
         </div>
       </div>
     </div>
@@ -58,17 +55,35 @@
     </tr>
     </thead>
     <tbody>
-    <tr  ng-click="selectRow(WPT.index)" ng-repeat="WPT in WPTS track by $index">
+    <tr ng-click="selectRow($index)" ng-repeat="WPT in WPTS track by $index" ng-class="{info:$even}">
       <td>{{WPT.index}}</td>
-      <td>{{WPT.name}}</td>
-      <td>{{WPT.easting}}</td>
-      <td>{{WPT.northing}}</td>
+
+      <td ng-show="!showForms" ng-dblclick="showForms=true">{{WPT.name}}</td>
+      <td ng-show="showForms">
+        <input ng-model="WPT.name"/>
+      </td>
+
+      <td ng-show="!showForms" ng-dblclick="showForms=true">{{WPT.easting}}</td>
+      <td ng-show="showForms">
+        <input ng-model="WPT.easting"/>
+      </td>
+
+      <td ng-show="!showForms" ng-dblclick="showForms=true">{{WPT.northing}}</td>
+      <td ng-show="showForms">
+        <input ng-model="WPT.northing"/>
+      </td>
+
       <td></td>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
-      <td class="selected"><input type="checkbox"></td>
+      <td class="selected"><input type="checkbox">
+        <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-ok clickable"
+           ng-click="saveChanges($index, WPT.name, WPT.easting, WPT.northing); showForms=false">Save
+        </span>
+        <span class="glyphicon glyphicon-remove clickable" ng-click="removeRow($index)"></span>
+      </td>
     </tr>
     </tbody>
   </table>

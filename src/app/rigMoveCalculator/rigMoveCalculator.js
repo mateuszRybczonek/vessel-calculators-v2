@@ -23,16 +23,16 @@ function rigMoveController($scope) {
   $scope.WPTS = [];
   $scope.track = {};
   $scope.selectedIndex = -1;
+  $scope.showForms = false;
 
   $scope.WPT = WPT;
   $scope.addNewWPT = addNewWPT;
   $scope.exportToJSON = exportToJSON;
   $scope.importFromJSON = importFromJSON;
   $scope.clearTable = clearTable;
-  $scope.readWPT = readWPT;
-  $scope.updateSelectedRow = updateSelectedRow;
-  $scope.removeSelectedRow = removeSelectedRow;
+  $scope.removeRow = removeRow;
   $scope.selectRow = selectRow;
+  $scope.saveChanges = saveChanges;
 
   function WPT(name, easting, northing, index) {
     this.name = name;
@@ -101,32 +101,12 @@ function rigMoveController($scope) {
     $scope.apply();
   }
 
-  function readWPT() {
-    var tableWPT = $(".tableWPT")[0];
-    var rowCount = tableWPT.rows.length;
-    for (var row = 0; row < rowCount; row++) {
-      if (tableWPT.rows[row].cells[9].firstChild.checked == 1) {
-        for (var iteration = 1; iteration < 4; iteration++) {
-          newText = tableWPT.rows[row].cells[iteration].innerHTML;
-          var item = $(".WPT-data input");
-          item[iteration - 1].value = newText;
-        }
-      }
-    }
+  function saveChanges (index, name, easting, northing) {
+    $scope.WPTS[index] = {'index': index+1, 'name':name, 'easting':easting, 'northing':northing};
   }
 
-  function updateSelectedRow() {
-    var WPTDataInputs = $(".WPT-data .form-control");
-    var updatedWPT = new WPT(WPTDataInputs[0].value,
-      WPTDataInputs[1].value,
-      WPTDataInputs[2].value,
-      $scope.selectedIndex + 1);
-
-    $scope.WPTS[$scope.selectedIndex] = updatedWPT;
-  }
-
-  function removeSelectedRow() {
-    $scope.WPTS.splice($scope.selectedIndex, 1);
+  function removeRow(selectedIndex) {
+    $scope.WPTS.splice(selectedIndex, 1);
     $scope.WPTS.map(function (WPT, index) {
       WPT.index = index + 1;
     });
@@ -134,11 +114,13 @@ function rigMoveController($scope) {
 
   }
 
-  function selectRow(WPTIndex) {
-    $scope.selectedIndex = WPTIndex - 1;
+  function selectRow(index) {
+    $scope.selectedIndex = index;
     var selectedRow = $('.tableWPT > tbody > tr')[$scope.selectedIndex];
+    selectedRow.childNodes[25].firstChild.checked === false ? selectedRow.childNodes[25].firstChild.checked = true
+      : selectedRow.childNodes[25].firstChild.checked = false;
     console.log(selectedRow);
-    console.log(selectedRow.childNodes[19].firstChild.checked = 1);
+    console.log(selectedRow.childNodes[25].firstChild.checked);
 
   }
 

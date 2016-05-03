@@ -29,6 +29,11 @@
   width: 100%;
 }
 
+.clickable:hover {
+  cursor: hand;
+  cursor: pointer;
+}
+
 .input-group.projected-speed {
   width: 250px;
 }
