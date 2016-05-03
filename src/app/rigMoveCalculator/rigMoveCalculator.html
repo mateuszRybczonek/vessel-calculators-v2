@@ -51,9 +51,9 @@
               ng-click="showForms=true"></span>
 
         <span ng-show="!$first" ng-click="moveUp($index)"
-              class="glyphicon glyphicon-arrow-up manipulation-icon"></span>
+              class="glyphicon glyphicon-arrow-up manipulation-icon clickable"></span>
         <span ng-show="!$last" ng-click="moveDown($index)"
-              class="glyphicon glyphicon-arrow-down manipulation-icon"></span>
+              class="glyphicon glyphicon-arrow-down manipulation-icon clickable"></span>
 
         <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-floppy-disk clickable"
               ng-click="saveChanges($index, WPT.name, WPT.easting, WPT.northing); showForms=false">
@@ -84,7 +84,7 @@
   <footer>
     <div class="btn-group col-xs-12 panel-footer">
       <div class="col-xs-12">
-        <button type="button" class="btn btn-default btn-gray">Calculate</button>
+        <button ng-click=calculate() type="button" class="btn btn-default btn-gray">Calculate</button>
         <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
 
         <button class="btn btn-default btn-gray import-export" ng-click="exportToJSON()" role="menuitem">Export as
@@ -97,8 +97,6 @@
     </div>
 
   </footer>
-  <script src="js/calculate.js"></script>
-  <script src="js/addNewRowInside.js"></script>
   <script src="js/drawing.js"></script>
   <script src="js/getCoordinates.js"></script>
 </div>
