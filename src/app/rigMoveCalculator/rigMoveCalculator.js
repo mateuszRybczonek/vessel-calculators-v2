@@ -32,6 +32,8 @@ function rigMoveController($scope) {
   $scope.clearTable = clearTable;
   $scope.removeRow = removeRow;
   $scope.saveChanges = saveChanges;
+  $scope.moveUp = moveUp;
+  $scope.moveDown = moveDown;
 
   function WPT(name, easting, northing, index) {
     this.name = name;
@@ -41,7 +43,7 @@ function rigMoveController($scope) {
   }
 
   function addNewWPT() {
-    var newWPT = new WPT("","","","");
+    var newWPT = new WPT("", "", "", "");
     $scope.WPTS.push(newWPT);
   }
 
@@ -95,8 +97,8 @@ function rigMoveController($scope) {
     $scope.WPTS = [];
   }
 
-  function saveChanges (index, name, easting, northing) {
-    $scope.WPTS[index] = {'index': index+1, 'name':name, 'easting':easting, 'northing':northing};
+  function saveChanges(index, name, easting, northing) {
+    $scope.WPTS[index] = {'index': index + 1, 'name': name, 'easting': easting, 'northing': northing};
   }
 
   function removeRow(selectedIndex) {
@@ -106,6 +108,22 @@ function rigMoveController($scope) {
     });
     console.log($scope.WPTS);
 
+  }
+
+  function moveRow(start, end) {
+    var stash = $scope.WPTS[end];
+    $scope.WPTS[end] = $scope.WPTS[start];
+    $scope.WPTS[start] = stash;
+    $scope.WPTS[start].index = start + 1;
+    $scope.WPTS[end].index = end + 1;
+  }
+
+  function moveUp(index) {
+    moveRow(index, index - 1);
+  }
+
+  function moveDown(index) {
+    moveRow(index, index + 1);
   }
 
 }

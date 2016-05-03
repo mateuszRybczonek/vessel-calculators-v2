@@ -47,17 +47,26 @@
       <td></td>
       <td></td>
       <td class="selected manipulation-col">
-        <span ng-show="!showForms" class="glyphicon glyphicon-pencil clickable manipulation-icon" ng-click="showForms=true"></span>
+        <span ng-show="!showForms" class="glyphicon glyphicon-pencil clickable manipulation-icon"
+              ng-click="showForms=true"></span>
+
+        <span ng-show="!$first" ng-click="moveUp($index)"
+              class="glyphicon glyphicon-arrow-up manipulation-icon"></span>
+        <span ng-show="!$last" ng-click="moveDown($index)"
+              class="glyphicon glyphicon-arrow-down manipulation-icon"></span>
+
         <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-floppy-disk clickable"
-           ng-click="saveChanges($index, WPT.name, WPT.easting, WPT.northing); showForms=false"><span class="icon-text"> SAVE</span>
+              ng-click="saveChanges($index, WPT.name, WPT.easting, WPT.northing); showForms=false">
+          <span class="icon-text"> SAVE</span>
         </span>
-        <span ng-show="!showForms" class="glyphicon glyphicon-remove clickable manipulation-icon" ng-click="removeRow($index)"></span>
+        <span ng-show="!showForms" class="glyphicon glyphicon-remove clickable manipulation-icon right"
+              ng-click="removeRow($index)"></span>
       </td>
     </tr>
     </tbody>
   </table>
-  <span ng-click="addNewWPT()" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text"> ADD</span>
-
+  <span ng-click="addNewWPT()" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right"> ADD</span>
+  <span class="clear"></span>
   <table id="canvasGroup">
     <tr>
       <td>
@@ -78,8 +87,11 @@
         <button type="button" class="btn btn-default btn-gray">Calculate</button>
         <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
 
-        <button class="btn btn-default btn-gray import-export" ng-click="exportToJSON()" role="menuitem">Export as JSON</button>
-        <button class="btn btn-default btn-gray import-export" ng-click="importFromJSON()" role="menuitem">Import JSON</button>
+        <button class="btn btn-default btn-gray import-export" ng-click="exportToJSON()" role="menuitem">Export as
+          JSON
+        </button>
+        <button class="btn btn-default btn-gray import-export" ng-click="importFromJSON()" role="menuitem">Import JSON
+        </button>
         <input class="btn btn-default btn-gray import-export" id="select-file" type="file" accept="application/json">
       </div>
     </div>
