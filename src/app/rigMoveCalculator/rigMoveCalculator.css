@@ -12,6 +12,36 @@
   top: 10px;
 }
 
+.gray {
+  background-color: #F8F7FF;
+}
+
+.wpt-index-col {
+  width: 30px;
+  text-align: center;
+}
+
+.edit-input {
+  width: 100px;
+}
+
+.manipulation-col {
+  width: 126px;
+}
+
+.add-new-row-icon {
+  margin-top: 20px;
+  float: right;
+}
+
+.icon-text {
+  font-family: Arial;
+  font-weight: bold;
+}
+
+.table-header {
+  font-size: 14px;
+}
 #calculate .input-group {
   margin: 10px;
 }
@@ -32,6 +62,10 @@
 .clickable:hover {
   cursor: hand;
   cursor: pointer;
+}
+
+.manipulation-icon {
+  margin-left: 4px;
 }
 
 .input-group.projected-speed {

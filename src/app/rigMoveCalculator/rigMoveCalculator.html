@@ -14,63 +14,31 @@
         <span class="input-group-addon">[kn]</span>
       </div>
     </div>
-    <div class="waypoint-data col-sm-push-2 col-sm-5 col-lg-push-4">
-      <button type="button" class="btn btn-default btn-gray btn-waypoint"
-              ng-click="isCollapsedWaypoint = !isCollapsedWaypoint">Waypoint data
-      </button>
-      <div uib-collapse="isCollapsedWaypoint" class="WPT-data">
-        <div class="well well-md">
-          <div class="input-group name-WPT">
-            <span class="input-group-addon">Name: &nbsp &nbsp</span>
-            <input ng-model="nameWPT" type="text" size="40" name="nameWPT"
-                   class="form-control" placeholder="">
-          </div>
-          <div class="input-group WPT-easting">
-            <span class="input-group-addon">Easting: &nbsp</span>
-            <input ng-model="WPTEasting" type="text" size="40" name="WPTEasting"
-                   class="form-control" placeholder="">
-            <span class="input-group-addon">[m]</span>
-          </div>
-          <div class="input-group WPT-northing">
-            <span class="input-group-addon">Northing:</span>
-            <input ng-model="WPTNorthing" type="text" size="40" name="WPTNorthing"
-                   class="form-control" placeholder="">
-            <span class="input-group-addon">[m]</span>
-          </div>
-          <button ng-click="addNewWPT()" name="add-new-WPT" type="button"
-                  class="btn btn-default btn-gray">Add new WPT
-          </button>
-          <button name="insert-WPT" type="button"
-                  class="btn btn-default btn-gray">Insert after selected row
-          </button>
-        </div>
-      </div>
-    </div>
   </header>
 
   <table class="table tableWPT">
     <thead>
     <tr>
-      <th ng-repeat="tableHeader in WPTTableHeaders" class="col-xs-1" scope="col">{{tableHeader}}</th>
+      <th class="table-header" ng-repeat="tableHeader in WPTTableHeaders" scope="col">{{tableHeader}}</th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-click="selectRow($index)" ng-repeat="WPT in WPTS track by $index" ng-class="{info:$even}">
-      <td>{{WPT.index}}</td>
+    <tr ng-repeat="WPT in WPTS track by $index" ng-class="{gray:$even}">
+      <td class="wpt-index-col">{{WPT.index}}</td>
 
-      <td ng-show="!showForms" ng-dblclick="showForms=true">{{WPT.name}}</td>
+      <td ng-show="!showForms">{{WPT.name}}</td>
       <td ng-show="showForms">
-        <input ng-model="WPT.name"/>
+        <input class="edit-input" ng-model="WPT.name"/>
       </td>
 
-      <td ng-show="!showForms" ng-dblclick="showForms=true">{{WPT.easting}}</td>
+      <td ng-show="!showForms">{{WPT.easting}}</td>
       <td ng-show="showForms">
-        <input ng-model="WPT.easting"/>
+        <input class="edit-input" ng-model="WPT.easting"/>
       </td>
 
-      <td ng-show="!showForms" ng-dblclick="showForms=true">{{WPT.northing}}</td>
+      <td ng-show="!showForms">{{WPT.northing}}</td>
       <td ng-show="showForms">
-        <input ng-model="WPT.northing"/>
+        <input class="edit-input" ng-model="WPT.northing"/>
       </td>
 
       <td></td>
@@ -78,15 +46,17 @@
       <td></td>
       <td></td>
       <td></td>
-      <td class="selected"><input type="checkbox">
-        <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-ok clickable"
-           ng-click="saveChanges($index, WPT.name, WPT.easting, WPT.northing); showForms=false">Save
+      <td class="selected manipulation-col">
+        <span ng-show="!showForms" class="glyphicon glyphicon-pencil clickable manipulation-icon" ng-click="showForms=true"></span>
+        <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-floppy-disk clickable"
+           ng-click="saveChanges($index, WPT.name, WPT.easting, WPT.northing); showForms=false"><span class="icon-text"> SAVE</span>
         </span>
-        <span class="glyphicon glyphicon-remove clickable" ng-click="removeRow($index)"></span>
+        <span ng-show="!showForms" class="glyphicon glyphicon-remove clickable manipulation-icon" ng-click="removeRow($index)"></span>
       </td>
     </tr>
     </tbody>
   </table>
+  <span ng-click="addNewWPT()" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text"> ADD</span>
 
   <table id="canvasGroup">
     <tr>
@@ -106,10 +76,6 @@
     <div class="btn-group col-xs-12 panel-footer">
       <div class="col-xs-12">
         <button type="button" class="btn btn-default btn-gray">Calculate</button>
-        <button ng-click="removeSelectedRow()" type="button" class="btn btn-default btn-gray">Remove selected row</button>
-        <button ng-click="readWPT()" name="read-WPT" type="button"
-                class="btn btn-default btn-gray">Read selected row
-        </button>
         <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
 
         <button class="btn btn-default btn-gray import-export" ng-click="exportToJSON()" role="menuitem">Export as JSON</button>

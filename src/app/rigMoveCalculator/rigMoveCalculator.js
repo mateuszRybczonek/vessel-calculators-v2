@@ -10,13 +10,13 @@ function rigMoveCalculator() {
 
 function rigMoveController($scope) {
   $scope.isCollapsedWaypoint = false;
-  $scope.WPTTableHeaders = ['WPT no.',
+  $scope.WPTTableHeaders = ['#',
     'WPT name',
-    'Coordinate Easting [m]',
-    'Coordinate Northing [m]',
+    'Easting [m]',
+    'Northing [m]',
     'Distance leg [m]',
-    'Distance done [m]',
-    'Distance remaining [m]',
+    'Dist. done [m]',
+    'Dist. remaining [m]',
     'Time leg',
     'Time remaining',
     'Selected'];
@@ -31,7 +31,6 @@ function rigMoveController($scope) {
   $scope.importFromJSON = importFromJSON;
   $scope.clearTable = clearTable;
   $scope.removeRow = removeRow;
-  $scope.selectRow = selectRow;
   $scope.saveChanges = saveChanges;
 
   function WPT(name, easting, northing, index) {
@@ -42,11 +41,7 @@ function rigMoveController($scope) {
   }
 
   function addNewWPT() {
-    var WPTDataInputs = $(".WPT-data .form-control");
-    var newWPT = new WPT(WPTDataInputs[0].value,
-      WPTDataInputs[1].value,
-      WPTDataInputs[2].value,
-      $scope.WPTS.length + 1);
+    var newWPT = new WPT("","","","");
     $scope.WPTS.push(newWPT);
   }
 
@@ -98,7 +93,6 @@ function rigMoveController($scope) {
 
   function clearTable() {
     $scope.WPTS = [];
-    $scope.apply();
   }
 
   function saveChanges (index, name, easting, northing) {
@@ -111,16 +105,6 @@ function rigMoveController($scope) {
       WPT.index = index + 1;
     });
     console.log($scope.WPTS);
-
-  }
-
-  function selectRow(index) {
-    $scope.selectedIndex = index;
-    var selectedRow = $('.tableWPT > tbody > tr')[$scope.selectedIndex];
-    selectedRow.childNodes[25].firstChild.checked === false ? selectedRow.childNodes[25].firstChild.checked = true
-      : selectedRow.childNodes[25].firstChild.checked = false;
-    console.log(selectedRow);
-    console.log(selectedRow.childNodes[25].firstChild.checked);
 
   }
 
