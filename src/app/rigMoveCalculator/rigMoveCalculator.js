@@ -85,6 +85,7 @@ function rigMoveController($scope) {
       fileReader.onload = receivedText;
       fileReader.readAsText(file);
     }
+    calculate();
 
     function receivedText(e) {
       lines = e.target.result;
@@ -107,7 +108,6 @@ function rigMoveController($scope) {
 
   function removeRow(selectedIndex) {
     $scope.WPTS.splice(selectedIndex, 1);
-    debugger;
     $scope.WPTS.map(function (WPT, index) {
       WPT.index = index + 1;
     });
@@ -120,16 +120,15 @@ function rigMoveController($scope) {
     $scope.WPTS[start] = stash;
     $scope.WPTS[start].index = start + 1;
     $scope.WPTS[end].index = end + 1;
+    calculate();
   }
 
   function moveUp(index) {
     moveRow(index, index - 1);
-    calculate();
   }
 
   function moveDown(index) {
     moveRow(index, index + 1);
-    calculate();
   }
 
   function calculate() {
@@ -137,6 +136,13 @@ function rigMoveController($scope) {
     var myTable = $('.tableWPT>tbody')[0];
     var rowCount = myTable.rows.length;
     var eastingDifference, northingDifference, dDistanceLeg, dDistanceDone, dDD1, dDD2, dTimeLeg, speed, hours, minutes, dDistanceRemaining, dDistanceRemaining1stRow, dTimeRemaining, dTimeRemaining1stRow, speed1stRow, hours1stRow, minutes1stRow;
+
+    legDistanceCalculation();
+    distanceDoneCalculation();
+    legTimeCalculation();
+    remainingTimeCalculation();
+    distanceRemainingAndTimeRemaining1stRow();
+    drawing();
 
     function legDistanceCalculation() {
       for (iteration = 1; iteration < rowCount; iteration++) {
@@ -205,14 +211,6 @@ function rigMoveController($scope) {
       if (minutes1stRow < 0) minutes1stRow = 60 + minutes1stRow;
       myTable.rows[0].cells[11].textContent = hours1stRow + " h " + minutes1stRow.toFixed(0) + " min";
     }
-
-
-    legDistanceCalculation();
-    distanceDoneCalculation();
-    legTimeCalculation();
-    remainingTimeCalculation();
-    distanceRemainingAndTimeRemaining1stRow();
-    drawing();
   }
 
   function drawing() {
