@@ -111,8 +111,9 @@ function rigMoveController($scope) {
     $scope.WPTS.map(function (WPT, index) {
       WPT.index = index + 1;
     });
-    calculate();
-
+    $scope.$watch('WPTS', function() {
+      calculate();
+    });
   }
 
   function moveRow(start, end) {
@@ -135,7 +136,7 @@ function rigMoveController($scope) {
   function calculate() {
     var iteration;
     var myTable = $('.tableWPT>tbody')[0];
-    var rowCount = myTable.rows.length;
+    var rowCount = $scope.WPTS.length;
     var eastingDifference, northingDifference, dDistanceLeg, dDistanceDone, dDD1, dDD2, dTimeLeg, speed, hours, minutes, dDistanceRemaining, dDistanceRemaining1stRow, dTimeRemaining, dTimeRemaining1stRow, speed1stRow, hours1stRow, minutes1stRow;
 
     legDistanceCalculation();
