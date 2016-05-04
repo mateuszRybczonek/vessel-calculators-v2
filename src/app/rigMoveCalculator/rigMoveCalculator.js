@@ -85,7 +85,7 @@ function rigMoveController($scope) {
       fileReader.onload = receivedText;
       fileReader.readAsText(file);
     }
-    calculate();
+
 
     function receivedText(e) {
       lines = e.target.result;
@@ -112,6 +112,7 @@ function rigMoveController($scope) {
       WPT.index = index + 1;
     });
     calculate();
+
   }
 
   function moveRow(start, end) {
@@ -145,9 +146,9 @@ function rigMoveController($scope) {
     drawing();
 
     function legDistanceCalculation() {
-      for (iteration = 1; iteration < rowCount; iteration++) {
-        eastingDifference = (myTable.rows[iteration].cells[3].textContent - myTable.rows[iteration - 1].cells[3].textContent);
-        northingDifference = (myTable.rows[iteration].cells[5].textContent - myTable.rows[iteration - 1].cells[5].textContent);
+      for (iteration = 1; iteration < $scope.WPTS.length; iteration++) {
+        eastingDifference = ($scope.WPTS[iteration].easting - $scope.WPTS[iteration-1].easting);
+        northingDifference = ($scope.WPTS[iteration].northing - $scope.WPTS[iteration-1].northing);
         dDistanceLeg = Math.sqrt(eastingDifference * eastingDifference + northingDifference * northingDifference);
         myTable.rows[iteration].cells[7].textContent = dDistanceLeg.toFixed(0);
       }
@@ -242,7 +243,7 @@ function rigMoveController($scope) {
         drawGridLinesLabels(context); // drawing 'Grid Lines' labels (string)
       }
     }
-    for (wptNumber = 0; wptNumber < myTable.rows.length; wptNumber++) {
+    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
       drawSHZ(context);
       drawWPTAndLabels(context);
     }
@@ -268,7 +269,7 @@ function rigMoveController($scope) {
         drawGridLinesLabels(smallCanvas1Context);
       }
     }
-    for (wptNumber = 0; wptNumber < myTable.rows.length; wptNumber++) {
+    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
       //draw SHZ
       drawSHZ(smallCanvas1Context);
       // draw WPT and add label with wptNumber to each WPT
@@ -277,10 +278,10 @@ function rigMoveController($scope) {
 
     //DRAW ON THIRD CANVAS (enlargement of end psn)
     clearCanvas(smallCanvas2Context, canvasArray[2]);
-    var tableLength = myTable.rows.length;
+    var tableLength = $scope.WPTS.length;
     scale = 8;
-    centerEasting = myTable.rows[Number(tableLength) - 1].cells[3].textContent;
-    centerNorthing = myTable.rows[Number(tableLength) - 1].cells[5].textContent;
+    centerEasting = $scope.WPTS[Number(tableLength) - 1].easting;
+    centerNorthing = $scope.WPTS[Number(tableLength) - 1].northing;
 
     eastingFrame = Math.floor(centerEasting - 200 * scale);
     northingFrame = Math.floor(centerNorthing - (-150 * scale));
@@ -297,7 +298,7 @@ function rigMoveController($scope) {
         drawGridLinesLabels(smallCanvas2Context);
       }
     }
-    for (wptNumber = 0; wptNumber < myTable.rows.length; wptNumber++) {
+    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
       //draw SHZ
       drawSHZ(smallCanvas2Context);
       // draw WPT and add label with wptNumber to each WPT
@@ -330,9 +331,9 @@ function rigMoveController($scope) {
     // to set up a drawing frame correctly (top-left corner as X=minEasting, Y=maxNorthing)
     function getMinEasting() {
       minEasting = 1000000;
-      for (row = 0; row < myTable.rows.length; row++) {
-        if (myTable.rows[row].cells[3].textContent < minEasting) {
-          minEasting = myTable.rows[row].cells[3].textContent;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].easting < minEasting) {
+          minEasting = $scope.WPTS[row].easting;
         }
       }
       return minEasting;
@@ -340,9 +341,9 @@ function rigMoveController($scope) {
 
     function getMaxEasting() {
       maxEasting = 0;
-      for (row = 0; row < myTable.rows.length; row++) {
-        if (myTable.rows[row].cells[3].textContent > maxEasting) {
-          maxEasting = myTable.rows[row].cells[3].textContent;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].easting > maxEasting) {
+          maxEasting = $scope.WPTS[row].easting;
         }
       }
       return maxEasting;
@@ -350,9 +351,9 @@ function rigMoveController($scope) {
 
     function getMaxNorthing() {
       maxNorthing = 0;
-      for (row = 0; row < myTable.rows.length; row++) {
-        if (myTable.rows[row].cells[5].textContent > maxNorthing) {
-          maxNorthing = myTable.rows[row].cells[5].textContent;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].northing > maxNorthing) {
+          maxNorthing = $scope.WPTS[row].northing;
         }
       }
       return maxNorthing;
@@ -360,9 +361,9 @@ function rigMoveController($scope) {
 
     function getMinNorthing() {
       minNorthing = 100000000;
-      for (row = 0; row < myTable.rows.length; row++) {
-        if (myTable.rows[row].cells[5].textContent < minNorthing) {
-          minNorthing = myTable.rows[row].cells[5].textContent;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].northing < minNorthing) {
+          minNorthing = $scope.WPTS[row].northing;
         }
       }
       return minNorthing;
@@ -399,17 +400,17 @@ function rigMoveController($scope) {
 
     function drawSHZ(argument)//draw 500m SHZ around WH position(nameOfTheCanvas)
     {
-      if (myTable.rows[wptNumber].cells[1].textContent == "WH") {
+      if ($scope.WPTS[wptNumber].name == "WH") {
         argument.strokeStyle = "black";
         argument.beginPath();
-        argument.arc(((myTable.rows[wptNumber].cells[3].textContent - eastingFrame) / scale),
-          ((northingFrame - myTable.rows[wptNumber].cells[5].textContent) / scale), 500 / scale, 0, 2 * Math.PI);
+        argument.arc((($scope.WPTS[wptNumber].easting - eastingFrame) / scale),
+          ((northingFrame - $scope.WPTS[wptNumber].northing) / scale), 500 / scale, 0, 2 * Math.PI);
         argument.lineWidth = "1";
         argument.stroke();
       }
       argument.strokeStyle = "red";
-      wptX = ((myTable.rows[wptNumber].cells[3].textContent) - eastingFrame) / scale;
-      wptY = (northingFrame - (myTable.rows[wptNumber].cells[5].textContent)) / scale;
+      wptX = (($scope.WPTS[wptNumber].easting) - eastingFrame) / scale;
+      wptY = (northingFrame - ($scope.WPTS[wptNumber].northing)) / scale;
       if (wptNumber > 0) {
         argument.beginPath();
         argument.moveTo(prevWptX, prevWptY);
@@ -422,12 +423,12 @@ function rigMoveController($scope) {
     function drawWPTAndLabels(argument) // draw WPT and add label with wptNumber to each WPT (nameOfTheCanvas)
     {
       if ((wptNumber + 1) % 2 == 0) {
-        if (myTable.rows[wptNumber].cells[1].textContent == "WH") {
+        if ($scope.WPTS[wptNumber].name == "WH") {
           argument.fillText(wptNumber + 1 + " (WH)", wptX + 3, wptY);
           argument.beginPath();
           argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
         }
-        else if (myTable.rows[wptNumber].cells[1].textContent == "SHZ") {
+        else if ($scope.WPTS[wptNumber].name == "SHZ") {
           argument.fillText(wptNumber + 1 + " (SHZ)", wptX + 3, wptY);
           argument.beginPath();
           argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
@@ -442,13 +443,13 @@ function rigMoveController($scope) {
 
       }
       else {
-        if (myTable.rows[wptNumber].cells[1].textContent == "WH") {
+        if ($scope.WPTS[wptNumber].name == "WH") {
           argument.fillText(wptNumber + 1 + " (WH)", wptX - 10, wptY);
           argument.beginPath();
           argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
           argument.stroke();
         }
-        else if (myTable.rows[wptNumber].cells[1].textContent == "SHZ") {
+        else if ($scope.WPTS[wptNumber].name == "SHZ") {
           argument.fillText(wptNumber + 1 + " (SHZ)", wptX - 10, wptY);
           argument.beginPath();
           argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
