@@ -151,7 +151,12 @@ function rigMoveController($scope) {
         eastingDifference = ($scope.WPTS[iteration].easting - $scope.WPTS[iteration-1].easting);
         northingDifference = ($scope.WPTS[iteration].northing - $scope.WPTS[iteration-1].northing);
         dDistanceLeg = Math.sqrt(eastingDifference * eastingDifference + northingDifference * northingDifference);
-        myTable.rows[iteration].cells[7].textContent = dDistanceLeg.toFixed(0);
+        if ($scope.WPTS[iteration-1].easting == null || $scope.WPTS[iteration-1].northing == null ) {
+          myTable.rows[iteration].cells[7].textContent = '';
+        }
+        else {
+          myTable.rows[iteration].cells[7].textContent = dDistanceLeg.toFixed(0);
+        }
       }
     }
 

@@ -1,7 +1,7 @@
 <div class="rig-move panel container-fluid" ng-show=ifTabSelected(1)>
   <header>
     <h1>Rig Move Calculator</h1>
-    <div id="calculate" class="col-md-5 col-lg-4">
+    <div class="col-md-5 col-lg-4">
       <div class="input-group track-name">
         <span class="input-group-addon">Track name:</span>
         <input type="text" size="40" name="trackName"
@@ -23,22 +23,53 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="WPT in WPTS track by $index" ng-class="{gray:$even}">
+    <tr ng-repeat="WPT in WPTS track by $index" ng-class="{grey:$even}">
       <td class="wpt-index-col">{{WPT.index}}</td>
 
       <td ng-show="!showForms">{{WPT.name}}</td>
       <td ng-show="showForms">
-        <input class="edit-input" ng-model="WPT.name"/>
+        <input class="edit-input" ng-model="WPT.name"
+               required
+               ng-pattern="/^[^<>]*$/"
+               ng-class="WPT.name==='' ? 'invalid-input-data' :
+               ('valid-input-data')"
+        />
       </td>
 
-      <td ng-show="!showForms">{{WPT.easting}}</td>
+      <td ng-show="!showForms"
+          ng-class="WPT.easting>500000 ? 'invalid-input-data' :
+               (WPT.easting>0.1 ? '' :
+               ('invalid-input-data'))">
+          {{WPT.easting}}
+      </td>
       <td ng-show="showForms">
-        <input class="edit-input" ng-model="WPT.easting"/>
+        <input class="edit-input" ng-model="WPT.easting"
+               required
+               ng-pattern="/^[0-9.]+$/"
+               ng-minlength="1"
+               ng-maxlength="6"
+               ng-class="WPT.easting>500000 ? 'invalid-input-data' :
+               (WPT.easting>0.1 ? 'valid-input-data' :
+               ('invalid-input-data'))"
+        />
       </td>
 
-      <td ng-show="!showForms">{{WPT.northing}}</td>
+      <td ng-show="!showForms"
+          ng-class="WPT.northing>10000000 ? 'invalid-input-data' :
+               (WPT.northing>0.1 ? '' :
+               ('invalid-input-data'))">
+          {{WPT.northing}}
+      </td>
       <td ng-show="showForms">
-        <input class="edit-input" ng-model="WPT.northing"/>
+        <input class="edit-input" ng-model="WPT.northing"
+               required
+               ng-pattern="/^[0-9.]+$/"
+               ng-minlength="1"
+               ng-maxlength="8"
+               ng-class="WPT.northing>10000000 ? 'invalid-input-data' :
+               (WPT.northing>0.1 ? 'valid-input-data' :
+               ('invalid-input-data'))"
+        />
       </td>
 
       <td></td>
@@ -82,20 +113,20 @@
   <footer>
     <div class="btn-group col-xs-12 panel-footer">
       <div class="col-xs-12">
-        <button ng-click=calculate() type="button" class="btn btn-default btn-gray">Calculate</button>
-        <button ng-click="clearTable()" type="button" class="btn btn-default btn-gray">Clear table</button>
+        <button ng-click=calculate() type="button" class="btn btn-default btn-grey">Calculate</button>
+        <button ng-click="clearTable()" type="button" class="btn btn-default btn-grey">Clear table</button>
 
-        <button class="btn btn-default btn-gray import-export" role="menuitem">
+        <button class="btn btn-default btn-grey import-export" role="menuitem">
           <a href="rigMoveCalculator/external/MAT001-RigMove.json">
             Download demo.json
           </a>
         </button>
-        <button class="btn btn-default btn-gray import-export" ng-click="exportToJSON()" role="menuitem">Export as
+        <button class="btn btn-default btn-grey import-export" ng-click="exportToJSON()" role="menuitem">Export as
           JSON
         </button>
-        <button class="btn btn-default btn-gray import-export" ng-click="importFromJSON()" role="menuitem">Import JSON
+        <button class="btn btn-default btn-grey import-export" ng-click="importFromJSON()" role="menuitem">Import JSON
         </button>
-        <input class="btn btn-default btn-gray import-export" id="select-file" type="file" accept="application/json">
+        <input class="btn btn-default btn-grey import-export" id="select-file" type="file" accept="application/json">
       </div>
       <span class="clear"></span>
     </div>

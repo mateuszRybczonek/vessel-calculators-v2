@@ -1,7 +1,7 @@
 function tatVerification() {
   return {
     restrict: "E",
-    templateUrl: "tatVerification/tatVerification.html",
+    templateUrl: "TATVerification/tatVerification.html",
     replace: true,
     transclude: false,
     controller: tatVerificationController

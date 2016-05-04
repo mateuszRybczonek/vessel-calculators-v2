@@ -1,12 +1,25 @@
-a {
+.rig-move {
+  margin-top: -30px;
+  margin-bottom: 0;
+}
+
+.rig-move a {
   color: #FFF;
 }
 
-a:hover {
+.invalid-input-data {
+  background-color: #ffccb5;
+}
+
+.valid-input-data {
+  background-color: #d2ffd4;
+}
+
+.rig-move a:hover {
   color: #373737
 }
 
-.btn-gray {
+.btn-grey {
   background-color: #373737;
   color: #FFF;
   font-weight: bold;
@@ -14,116 +27,70 @@ a:hover {
   margin-top: 10px;
 }
 
-.btn-waypoint {
+.rig-move .btn-waypoint {
   width: 270px;
   position: relative;
   top: 10px;
 }
 
-.gray {
+.rig-move .grey {
   background-color: #F8F7FF;
 }
 
-.wpt-index-col {
+.rig-move .wpt-index-col {
   width: 30px;
   text-align: center;
 }
 
-.edit-input {
+.rig-move .edit-input {
   width: 100px;
 }
 
-.manipulation-col {
+.rig-move .manipulation-col {
   width: 126px;
 }
 
-.right {
-  float: right;
-}
-
-.left {
-  float: left;
-}
-
-.clear {
-  clear: both;
-}
-
-.add-new-row-icon {
+.rig-move .add-new-row-icon {
   margin-top: 20px;
 }
 
-.icon-text {
+.rig-move .icon-text {
   font-family: Arial;
   font-weight: bold;
 }
 
-.table-header {
+.rig-move .table-header {
   font-size: 14px;
 }
-#calculate .input-group {
+
+.rig-move .input-group {
   margin: 10px;
+  width: 250px;
 }
 
-.waypoint-data .input-group {
+.rig-move .waypoint-data .input-group {
   margin: 10px 0;
 }
 
-.waypoint-data {
+.rig-move .waypoint-data {
   margin-top: 20px;
   width: 300px;
 }
 
-.table.tableWPT {
+.rig-move .table.tableWPT {
   width: 100%;
 }
 
-.clickable:hover {
-  cursor: hand;
-  cursor: pointer;
-}
-
-.manipulation-icon {
+.rig-move .manipulation-icon {
   margin-left: 4px;
 }
 
-.input-group.projected-speed {
-  width: 250px;
-}
-
-.input-group.track-name {
-  width: 250px;
-}
-
-#canvasGroup {
+.rig-move #canvasGroup {
   margin-top: 20px;
   margin-bottom: 70px;
 }
 
-.canvas {
+.rig-move .canvas {
   border: 2px solid gray;
   background-color: #F8F7FF;
-}
-
-.rig-move .panel-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 0;
-  width: 100%;
-  z-index: 9;
-  min-height: 60px;
-}
-
-.rig-move {
-  margin-top: -30px;
-  margin-bottom: 0;
-}
-
-.rig-move .import-export {
-  float: right;
-}
-
-.panel-footer {
-  border-top: solid 2px gray;
 }
