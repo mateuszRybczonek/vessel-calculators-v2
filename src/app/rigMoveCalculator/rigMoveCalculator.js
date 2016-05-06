@@ -137,11 +137,9 @@ function rigMoveController($scope) {
     var iteration;
     var myTable = $('.tableWPT>tbody')[0];
     var rowCount = $scope.WPTS.length;
-    var eastingDifference, northingDifference, distanceLeg;
-    var distanceDone, currentLeg, previousLeg, previousDistanceDone, currentDistanceDone;
-    var timeLeg, speed, hours, minutes, currentLegTime;
-    var distanceRemaining, dDistanceRemaining1stRow, timeRemaining, dTimeRemaining1stRow,
-      speed1stRow, hours1stRow, minutes1stRow;
+    var timeRemaining1stRow, hours1stRow, minutes1stRow, hours, minutes, totalDistance;
+    var speed = $('.projected-speed-input').val();
+
 
     legDistanceCalculation();
     distanceDoneCalculation();
@@ -151,6 +149,7 @@ function rigMoveController($scope) {
     drawing();
 
     function legDistanceCalculation() {
+      var eastingDifference, northingDifference, distanceLeg, currentLeg;
       for (iteration = 1; iteration < $scope.WPTS.length; iteration++) {
         currentLeg = myTable.rows[iteration].cells[7];
         eastingDifference = ($scope.WPTS[iteration].easting - $scope.WPTS[iteration - 1].easting);
@@ -164,6 +163,7 @@ function rigMoveController($scope) {
     }
 
     function distanceDoneCalculation() {
+      var distanceDone, currentLeg, previousLeg, previousDistanceDone, currentDistanceDone;
       for (iteration = 1; iteration < rowCount; iteration++) {
         currentLeg = myTable.rows[iteration].cells[7];
         previousLeg = myTable.rows[iteration - 1].cells[7];
@@ -181,46 +181,39 @@ function rigMoveController($scope) {
     }
 
     function legTimeCalculation() {
+      var timeLeg, currentLegTime, currentLeg;
       for (iteration = 1; iteration < rowCount; iteration++) {
         {
           currentLeg = myTable.rows[iteration].cells[7];
-          currentLegTime = myTable.rows[iteration].cells[10];
-          speed = $('.projected-speed-input').val();
+          currentLegTime = myTable.rows[iteration-1].cells[10];
           timeLeg = (currentLeg.textContent) / 1852 / speed;
-          hours = Math.round(timeLeg);
+          hours = Math.floor(timeLeg);
           minutes = ((timeLeg - hours) * 60);
-          if (minutes < 0) minutes = 60 + minutes;
           currentLegTime.textContent = hours + " h " + minutes.toFixed(0) + " min";
         }
       }
     }
 
     function remainingTimeCalculation() {
-      var totalDistance = myTable.rows[rowCount-1].cells[8];
-
+      totalDistance = myTable.rows[rowCount - 1].cells[8].textContent;
+      myTable.rows[0].cells[9].textContent = totalDistance;
+      var currentDistanceDone, distanceRemaining, timeRemaining;
       for (iteration = 1; iteration < rowCount; iteration++) {
         currentDistanceDone = myTable.rows[iteration].cells[8];
-        distanceRemaining = totalDistance.textContent- currentDistanceDone.textContent;
+        distanceRemaining = totalDistance - currentDistanceDone.textContent;
         myTable.rows[iteration].cells[9].textContent = distanceRemaining;
 
-        speed = $('.projected-speed-input').val();
         timeRemaining = distanceRemaining / 1852 / speed;
-        hours = Math.round(timeRemaining);
+        hours = Math.floor(timeRemaining);
         minutes = ((timeRemaining - hours) * 60);
-        if (minutes < 0) minutes = 60 + minutes;
         myTable.rows[iteration].cells[11].textContent = hours + " h " + minutes.toFixed(0) + " min";
       }
     }
 
     function distanceRemainingAndTimeRemaining1stRow() {
-      dDistanceRemaining1stRow = myTable.rows[rowCount - 1].cells[8].textContent;
-      myTable.rows[0].cells[9].textContent = dDistanceRemaining1stRow;
-      speed1stRow = $('.projected-speed-input').val();
-
-      dTimeRemaining1stRow = dDistanceRemaining1stRow / 1852 / speed1stRow;
-      hours1stRow = Math.round(dTimeRemaining1stRow);
-      minutes1stRow = (dTimeRemaining1stRow - hours1stRow) * 60;
-      if (minutes1stRow < 0) minutes1stRow = 60 + minutes1stRow;
+      timeRemaining1stRow = totalDistance / 1852 / speed;
+      hours1stRow = Math.floor(timeRemaining1stRow);
+      minutes1stRow = (timeRemaining1stRow - hours1stRow) * 60;
       myTable.rows[0].cells[11].textContent = hours1stRow + " h " + minutes1stRow.toFixed(0) + " min";
     }
   }
