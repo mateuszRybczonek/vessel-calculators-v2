@@ -137,15 +137,14 @@ function rigMoveController($scope) {
     var iteration;
     var myTable = $('.tableWPT>tbody')[0];
     var rowCount = $scope.WPTS.length;
-    var timeRemaining1stRow, hours1stRow, minutes1stRow, hours, minutes, totalDistance;
+    var timeRemaining, hours, minutes, totalDistance;
     var speed = $('.projected-speed-input').val();
-
 
     legDistanceCalculation();
     distanceDoneCalculation();
     legTimeCalculation();
     remainingTimeCalculation();
-    distanceRemainingAndTimeRemaining1stRow();
+    timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent,myTable.rows[0].cells[11]);
     drawing();
 
     function legDistanceCalculation() {
@@ -181,15 +180,10 @@ function rigMoveController($scope) {
     }
 
     function legTimeCalculation() {
-      var timeLeg, currentLegTime, currentLeg;
       for (iteration = 1; iteration < rowCount; iteration++) {
         {
-          currentLeg = myTable.rows[iteration].cells[7];
-          currentLegTime = myTable.rows[iteration-1].cells[10];
-          timeLeg = (currentLeg.textContent) / 1852 / speed;
-          hours = Math.floor(timeLeg);
-          minutes = ((timeLeg - hours) * 60);
-          currentLegTime.textContent = hours + " h " + minutes.toFixed(0) + " min";
+          timeRemainingFunc(myTable.rows[iteration].cells[7].textContent,// current leg
+            myTable.rows[iteration-1].cells[10]);// currentLegTime
         }
       }
     }
@@ -197,24 +191,22 @@ function rigMoveController($scope) {
     function remainingTimeCalculation() {
       totalDistance = myTable.rows[rowCount - 1].cells[8].textContent;
       myTable.rows[0].cells[9].textContent = totalDistance;
-      var currentDistanceDone, distanceRemaining, timeRemaining;
+      var currentDistanceDone, distanceRemaining, remainingTime;
       for (iteration = 1; iteration < rowCount; iteration++) {
+        remainingTime = myTable.rows[iteration].cells[11];
         currentDistanceDone = myTable.rows[iteration].cells[8];
         distanceRemaining = totalDistance - currentDistanceDone.textContent;
         myTable.rows[iteration].cells[9].textContent = distanceRemaining;
 
-        timeRemaining = distanceRemaining / 1852 / speed;
-        hours = Math.floor(timeRemaining);
-        minutes = ((timeRemaining - hours) * 60);
-        myTable.rows[iteration].cells[11].textContent = hours + " h " + minutes.toFixed(0) + " min";
+        timeRemainingFunc(distanceRemaining, remainingTime);
       }
     }
 
-    function distanceRemainingAndTimeRemaining1stRow() {
-      timeRemaining1stRow = totalDistance / 1852 / speed;
-      hours1stRow = Math.floor(timeRemaining1stRow);
-      minutes1stRow = (timeRemaining1stRow - hours1stRow) * 60;
-      myTable.rows[0].cells[11].textContent = hours1stRow + " h " + minutes1stRow.toFixed(0) + " min";
+    function timeRemainingFunc(distance, target) {
+      timeRemaining = distance / 1852 / speed;
+      hours = Math.floor(timeRemaining);
+      minutes = (timeRemaining - hours) * 60;
+      target.textContent = hours + " h " + minutes.toFixed(0) + " min";
     }
   }
 
