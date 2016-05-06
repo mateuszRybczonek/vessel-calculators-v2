@@ -111,7 +111,7 @@ function rigMoveController($scope) {
     $scope.WPTS.map(function (WPT, index) {
       WPT.index = index + 1;
     });
-    $scope.$watch('WPTS', function() {
+    $scope.$watch('WPTS', function () {
       calculate();
     });
   }
@@ -137,7 +137,11 @@ function rigMoveController($scope) {
     var iteration;
     var myTable = $('.tableWPT>tbody')[0];
     var rowCount = $scope.WPTS.length;
-    var eastingDifference, northingDifference, dDistanceLeg, dDistanceDone, dDD1, dDD2, dTimeLeg, speed, hours, minutes, dDistanceRemaining, dDistanceRemaining1stRow, dTimeRemaining, dTimeRemaining1stRow, speed1stRow, hours1stRow, minutes1stRow;
+    var eastingDifference, northingDifference, distanceLeg;
+    var distanceDone, currentLeg, previousLeg, previousDistanceDone, currentDistanceDone;
+    var timeLeg, speed, hours, minutes, currentLegTime;
+    var distanceRemaining, dDistanceRemaining1stRow, timeRemaining, dTimeRemaining1stRow,
+      speed1stRow, hours1stRow, minutes1stRow;
 
     legDistanceCalculation();
     distanceDoneCalculation();
@@ -148,60 +152,61 @@ function rigMoveController($scope) {
 
     function legDistanceCalculation() {
       for (iteration = 1; iteration < $scope.WPTS.length; iteration++) {
-        eastingDifference = ($scope.WPTS[iteration].easting - $scope.WPTS[iteration-1].easting);
-        northingDifference = ($scope.WPTS[iteration].northing - $scope.WPTS[iteration-1].northing);
-        dDistanceLeg = Math.sqrt(eastingDifference * eastingDifference + northingDifference * northingDifference);
-        if ($scope.WPTS[iteration-1].easting == null || $scope.WPTS[iteration-1].northing == null ) {
-          myTable.rows[iteration].cells[7].textContent = '';
-        }
-        else {
-          myTable.rows[iteration].cells[7].textContent = dDistanceLeg.toFixed(0);
-        }
+        currentLeg = myTable.rows[iteration].cells[7];
+        eastingDifference = ($scope.WPTS[iteration].easting - $scope.WPTS[iteration - 1].easting);
+        northingDifference = ($scope.WPTS[iteration].northing - $scope.WPTS[iteration - 1].northing);
+        distanceLeg = Math.sqrt(eastingDifference * eastingDifference + northingDifference * northingDifference);
+
+        ($scope.WPTS[iteration - 1].easting == null || $scope.WPTS[iteration - 1].northing == null ) ?
+          currentLeg.textContent = '' :
+          currentLeg.textContent = distanceLeg.toFixed(0);
       }
     }
 
     function distanceDoneCalculation() {
       for (iteration = 1; iteration < rowCount; iteration++) {
-        //if previous distanceDone empty
-        if (myTable.rows[iteration - 1].cells[7].textContent == null) {
-          dDistanceDone = parseFloat(0 + myTable.rows[iteration].cells[7].textContent);
-        }
-        else if (myTable.rows[iteration - 1].cells[7].textContent == "") {
-          dDistanceDone = parseFloat(0 + myTable.rows[iteration].cells[7].textContent);
+        currentLeg = myTable.rows[iteration].cells[7];
+        previousLeg = myTable.rows[iteration - 1].cells[7];
+        previousDistanceDone = myTable.rows[iteration - 1].cells[8];
+        currentDistanceDone = myTable.rows[iteration].cells[8];
+        if (previousLeg.textContent == null ||
+          previousLeg.textContent == "") {
+          distanceDone = parseFloat(0 + currentLeg.textContent);
         }
         else {
-          dDD1 = myTable.rows[iteration - 1].cells[8].textContent; //previous leg
-          dDD2 = myTable.rows[iteration].cells[7].textContent; // current leg
-          dDistanceDone = parseFloat(dDD1) + parseFloat(dDD2);
+          distanceDone = parseFloat(previousDistanceDone.textContent) + parseFloat(currentLeg.textContent);
         }
-
-        myTable.rows[iteration].cells[8].textContent = dDistanceDone;
+        currentDistanceDone.textContent = distanceDone;
       }
     }
 
     function legTimeCalculation() {
       for (iteration = 1; iteration < rowCount; iteration++) {
         {
+          currentLeg = myTable.rows[iteration].cells[7];
+          currentLegTime = myTable.rows[iteration].cells[10];
           speed = $('.projected-speed-input').val();
-          dTimeLeg = (myTable.rows[iteration].cells[7].textContent) / 1852 / speed;
-          hours = Math.round(dTimeLeg);
-          minutes = ((dTimeLeg - hours) * 60);
+          timeLeg = (currentLeg.textContent) / 1852 / speed;
+          hours = Math.round(timeLeg);
+          minutes = ((timeLeg - hours) * 60);
           if (minutes < 0) minutes = 60 + minutes;
-          myTable.rows[iteration].cells[10].textContent = hours + " h " + minutes.toFixed(0) + " min";
+          currentLegTime.textContent = hours + " h " + minutes.toFixed(0) + " min";
         }
       }
     }
 
     function remainingTimeCalculation() {
+      var totalDistance = myTable.rows[rowCount-1].cells[8];
+
       for (iteration = 1; iteration < rowCount; iteration++) {
-        dDistanceRemaining = myTable.rows[rowCount - 1].cells[8].textContent
-          - myTable.rows[iteration].cells[8].textContent;
-        myTable.rows[iteration].cells[9].textContent = dDistanceRemaining;
+        currentDistanceDone = myTable.rows[iteration].cells[8];
+        distanceRemaining = totalDistance.textContent- currentDistanceDone.textContent;
+        myTable.rows[iteration].cells[9].textContent = distanceRemaining;
 
         speed = $('.projected-speed-input').val();
-        dTimeRemaining = dDistanceRemaining / 1852 / speed;
-        hours = Math.round(dTimeRemaining);
-        minutes = ((dTimeRemaining - hours) * 60);
+        timeRemaining = distanceRemaining / 1852 / speed;
+        hours = Math.round(timeRemaining);
+        minutes = ((timeRemaining - hours) * 60);
         if (minutes < 0) minutes = 60 + minutes;
         myTable.rows[iteration].cells[11].textContent = hours + " h " + minutes.toFixed(0) + " min";
       }
@@ -226,15 +231,15 @@ function rigMoveController($scope) {
     var smallCanvas1Context = canvasArray[1].getContext("2d");
     var smallCanvas2Context = canvasArray[2].getContext("2d");
     var wptNumber, gridSpaceX, gridSpaceY, row, scale;
-    var minEasting=0, maxEasting=0, minNorthing=0, maxNorthing=0;
-    var eastingFrame=0, northingFrame=0;
-    var centerEasting=0, centerNorthing=0;
+    var minEasting = 0, maxEasting = 0, minNorthing = 0, maxNorthing = 0;
+    var eastingFrame = 0, northingFrame = 0;
+    var centerEasting = 0, centerNorthing = 0;
     var myTable = $('.tableWPT>tbody')[0];
     var wptX, wptY, prevWptX, prevWptY;
 
     clearCanvas(context, canvasArray[0]);
 
-        //DRAW ON MAIN CANVAS (all route)
+    //DRAW ON MAIN CANVAS (all route)
     scale = 32;
     getMinMaxEastingsNorthings();
     getCenterPoint(maxEasting, minEasting, maxNorthing, minNorthing);
