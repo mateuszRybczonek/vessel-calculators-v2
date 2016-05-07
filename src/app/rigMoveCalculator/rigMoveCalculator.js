@@ -46,6 +46,7 @@ function rigMoveController($scope) {
       step: 0.5,
       slide: function (event, ui) {
         $("#speed").val(ui.value / 10);
+        calculate();
       }
     });
   })();
@@ -108,6 +109,9 @@ function rigMoveController($scope) {
       $scope.WPTS = $scope.WPTJSON.WPTS;
       $scope.$apply();
     }
+    $scope.$watch('WPTS', function () {
+      calculate();
+    });
   }
 
   function clearTable() {
