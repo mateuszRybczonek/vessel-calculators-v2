@@ -7,6 +7,11 @@
   color: #FFF;
 }
 
+#speed-slider {
+  width: 250px;
+  margin-left: 10px;
+}
+
 .invalid-input-data {
   background-color: #ffccb5;
 }

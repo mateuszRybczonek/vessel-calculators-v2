@@ -37,6 +37,19 @@ function rigMoveController($scope) {
   $scope.calculate = calculate;
   $scope.drawing = drawing;
 
+  (function speedSlider() {
+    $("#speed-slider").slider({
+      range: "max",
+      min: 1,
+      max: 50,
+      value: 0.25,
+      step: 0.5,
+      slide: function (event, ui) {
+        $("#speed").val(ui.value / 10);
+      }
+    });
+  })();
+
   function WPT(name, easting, northing, index) {
     this.name = name;
     this.easting = easting;
@@ -144,7 +157,7 @@ function rigMoveController($scope) {
     distanceDoneCalculation();
     legTimeCalculation();
     remainingTimeCalculation();
-    timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent,myTable.rows[0].cells[11]);
+    timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent, myTable.rows[0].cells[11]);
     drawing();
 
     function legDistanceCalculation() {
@@ -183,7 +196,7 @@ function rigMoveController($scope) {
       for (iteration = 1; iteration < rowCount; iteration++) {
         {
           timeRemainingFunc(myTable.rows[iteration].cells[7].textContent,// current leg
-            myTable.rows[iteration-1].cells[10]);// currentLegTime
+            myTable.rows[iteration - 1].cells[10]);// currentLegTime
         }
       }
     }
