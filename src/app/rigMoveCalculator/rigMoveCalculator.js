@@ -24,6 +24,7 @@ function rigMoveController($scope) {
   $scope.track = {};
   $scope.selectedIndex = -1;
   $scope.showForms = false;
+  $scope.scale = 32;
 
   $scope.WPT = WPT;
   $scope.addNewWPT = addNewWPT;
@@ -34,8 +35,6 @@ function rigMoveController($scope) {
   $scope.saveChanges = saveChanges;
   $scope.moveUp = moveUp;
   $scope.moveDown = moveDown;
-  $scope.calculate = calculate;
-  $scope.drawing = drawing;
 
   (function speedSlider() {
     $("#speed-slider").slider({
@@ -47,6 +46,20 @@ function rigMoveController($scope) {
       slide: function (event, ui) {
         $("#speed").val((ui.value / 10).toFixed(2));
         calculate();
+      }
+    });
+  })();
+
+  (function scaleSlider(){
+    $("#scale-slider").slider({
+      range: "max",
+      min: 0,
+      max: 30,
+      value: 0,
+      step: 0.1,
+      slide: function (event, ui){
+        $scope.scale = 35-ui.value;
+        drawingSVG();
       }
     });
   })();
@@ -166,7 +179,6 @@ function rigMoveController($scope) {
       legTimeCalculation();
       remainingTimeCalculation();
       timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent, myTable.rows[0].cells[11]);
-      drawing();
       drawingSVG();
 
     }
@@ -240,13 +252,12 @@ function rigMoveController($scope) {
     while (svg.lastChild) {
       svg.removeChild(svg.lastChild);
     }
-    var wptNumber, gridSpaceX, row, scale;
+    var wptNumber, gridSpaceX, row;
     var minEasting = 0, maxEasting = 0, minNorthing = 0, maxNorthing = 0;
     var eastingFrame = 0, northingFrame = 0;
     var centerEasting = 0, centerNorthing = 0;
     var wptX, wptY, prevWptX, prevWptY;
 
-    scale = 32;
     getMinMaxEastingsNorthings();
     getCenterPoint(maxEasting, minEasting, maxNorthing, minNorthing);
     roundToNearest500(220, 230);
@@ -256,8 +267,8 @@ function rigMoveController($scope) {
       drawLine(0, 100 * gridSpaceX, 100 * (Math.round(svg.clientWidth / 100 + 1)), 100 * gridSpaceX, "black", 0.3, 1);
       // vertical grid lines
       drawLine(100 * gridSpaceX, 0, 100 * gridSpaceX, 100 * (Math.round(svg.clientWidth / 100 + 1)), "black", 0.3, 1);
-      drawLabel(100 * gridSpaceX - 55, 585, "E " + (eastingFrame + scale * 100 * gridSpaceX)); //easting labels
-      drawLabel(10, 100 * gridSpaceX - 3, "N " + (northingFrame - scale * 100 * gridSpaceX)); //northing labels
+      drawLabel(100 * gridSpaceX - 55, 585, "E " + (eastingFrame + $scope.scale * 100 * gridSpaceX)); //easting labels
+      drawLabel(10, 100 * gridSpaceX - 3, "N " + (northingFrame - $scope.scale * 100 * gridSpaceX)); //northing labels
     }
 
     for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
@@ -322,51 +333,16 @@ function rigMoveController($scope) {
 
     function roundToNearest500(arg1, arg2) //create [0,0] grid point on nearest 500 coordinates  (x-shift, y-shift)
     {
-      eastingFrame = Math.floor((centerEasting - arg1 * scale) / 500) * 500;
-      northingFrame = Math.ceil((centerNorthing + arg2 * scale) / 500) * 500;
-    }
-
-    function drawLine(startX, startY, endX, endY, color, strokeWidth, opacity) {
-      var gridLine = document.createElementNS('http://www.w3.org/2000/svg', "path");
-      gridLine.setAttributeNS(null, "d", ("M" + startX + ", " + startY +
-      " L" + endX + ", " + endY));
-      gridLine.setAttributeNS(null, "stroke", color);
-      gridLine.setAttributeNS(null, "stroke-width", strokeWidth);
-      gridLine.setAttributeNS(null, "opacity", opacity);
-      svg.appendChild(gridLine);
-    }
-
-    function drawLabel(positionX, positionY, value) // drawing 'Grid Lines' labels
-    {
-      var gridLineLabel = document.createElementNS('http://www.w3.org/2000/svg', "text");
-      gridLineLabel.setAttributeNS(null, "x", positionX);
-      gridLineLabel.setAttributeNS(null, "y", positionY);
-      gridLineLabel.setAttributeNS(null, "font", "Arial");
-      gridLineLabel.setAttributeNS(null, "stroke", "black");
-      gridLineLabel.setAttributeNS(null, "font-size", "12px");
-      gridLineLabel.setAttributeNS(null, "font-weight", "normal");
-      gridLineLabel.setAttributeNS(null, "opacity", "0.7");
-      var textNode = document.createTextNode(value);
-      gridLineLabel.appendChild(textNode);
-      svg.appendChild(gridLineLabel);
-    }
-
-    function drawCirlce(positionX, positionY, radius) {
-      var circle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
-      circle.setAttributeNS(null, "cx", positionX);
-      circle.setAttributeNS(null, "cy", positionY);
-      circle.setAttributeNS(null, "r", radius);
-      circle.setAttributeNS(null, "stroke", "black");
-      circle.setAttributeNS(null, "fill", "none");
-      circle.setAttributeNS(null, "stroke-width", "1");
-      svg.appendChild(circle);
+      eastingFrame = Math.floor((centerEasting - arg1 * $scope.scale) / 500) * 500;
+      northingFrame = Math.ceil((centerNorthing + arg2 * $scope.scale) / 500) * 500;
     }
 
     function drawSHZandTrack() {
-      wptX = (($scope.WPTS[wptNumber].easting) - eastingFrame) / scale;
-      wptY = (northingFrame - ($scope.WPTS[wptNumber].northing)) / scale;
+      wptX = (($scope.WPTS[wptNumber].easting) - eastingFrame) / $scope.scale;
+      wptY = (northingFrame - ($scope.WPTS[wptNumber].northing)) / $scope.scale;
       if ($scope.WPTS[wptNumber].name == "WH") {
-        drawCirlce(wptX, wptY, 500 / scale);
+        drawCircle(wptX, wptY, 500 / $scope.scale);
+        wptNumber > 0 ? drawLine(prevWptX, prevWptY, wptX, wptY, "red", 0.8, 1) : false;
         prevWptX = wptX;
         prevWptY = wptY;
       }
@@ -381,17 +357,52 @@ function rigMoveController($scope) {
     {
       var labelPositionX;
       var wptName = $scope.WPTS[wptNumber].name;
-      ((wptNumber + 1) % 2 == 0) ? labelPositionX = wptX - 13 : labelPositionX = wptX + 3;
+      (wptNumber % 2 !== 0) ? labelPositionX = wptX - 13 : labelPositionX = wptX + 3;
       if (wptName == "WH" || $scope.WPTS[wptNumber].name == "SHZ") {
         drawLabel(labelPositionX, wptY - 2, wptNumber + 1 + "(" + wptName + ")");
-        drawCirlce(wptX, wptY, 2)
+        drawCircle(wptX, wptY, 2)
       }
       else {
         drawLabel(labelPositionX, wptY - 2, wptNumber + 1);
-        drawCirlce(wptX, wptY, 2)
+        drawCircle(wptX, wptY, 2)
       }
       prevWptX = wptX;
       prevWptY = wptY;
+    }
+
+    function drawLine(startX, startY, endX, endY, color, strokeWidth, opacity) {
+      var gridLine = document.createElementNS('http://www.w3.org/2000/svg', "path");
+      gridLine.setAttributeNS(null, "d", ("M" + startX + ", " + startY +
+      " L" + endX + ", " + endY));
+      gridLine.setAttributeNS(null, "stroke", color);
+      gridLine.setAttributeNS(null, "stroke-width", strokeWidth);
+      gridLine.setAttributeNS(null, "opacity", opacity);
+      svg.appendChild(gridLine);
+    }
+
+    function drawLabel(positionX, positionY, value) {
+      var gridLineLabel = document.createElementNS('http://www.w3.org/2000/svg', "text");
+      gridLineLabel.setAttributeNS(null, "x", positionX);
+      gridLineLabel.setAttributeNS(null, "y", positionY);
+      gridLineLabel.setAttributeNS(null, "font", "Arial");
+      gridLineLabel.setAttributeNS(null, "stroke", "black");
+      gridLineLabel.setAttributeNS(null, "font-size", "12px");
+      gridLineLabel.setAttributeNS(null, "font-weight", "normal");
+      gridLineLabel.setAttributeNS(null, "opacity", "0.7");
+      var textNode = document.createTextNode(value);
+      gridLineLabel.appendChild(textNode);
+      svg.appendChild(gridLineLabel);
+    }
+
+    function drawCircle(positionX, positionY, radius) {
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+      circle.setAttributeNS(null, "cx", positionX);
+      circle.setAttributeNS(null, "cy", positionY);
+      circle.setAttributeNS(null, "r", radius);
+      circle.setAttributeNS(null, "stroke", "black");
+      circle.setAttributeNS(null, "fill", "none");
+      circle.setAttributeNS(null, "stroke-width", "1");
+      svg.appendChild(circle);
     }
   }
 }

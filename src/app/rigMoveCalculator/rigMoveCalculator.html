@@ -44,7 +44,7 @@
           ng-class="WPT.easting>500000 ? 'invalid-input-data' :
                (WPT.easting>0.1 ? '' :
                ('invalid-input-data'))">
-          {{WPT.easting}}
+        {{WPT.easting}}
       </td>
       <td ng-show="showForms">
         <input class="edit-input" ng-model="WPT.easting"
@@ -62,7 +62,7 @@
           ng-class="WPT.northing>10000000 ? 'invalid-input-data' :
                (WPT.northing>0.1 ? '' :
                ('invalid-input-data'))">
-          {{WPT.northing}}
+        {{WPT.northing}}
       </td>
       <td ng-show="showForms">
         <input class="edit-input" ng-model="WPT.northing"
@@ -102,6 +102,11 @@
   </table>
   <span ng-click="addNewWPT()" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right"> ADD</span>
   <span class="clear"></span>
+
+  <div class="scale-selector">
+    <span>Scale selector</span>
+    <div id="scale-slider"></div>
+  </div>
 
   <svg class="track-main-view">
   </svg>

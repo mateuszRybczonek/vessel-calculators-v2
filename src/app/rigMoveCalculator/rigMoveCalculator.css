@@ -100,12 +100,8 @@
   background-color: #F8F7FF;
 }
 
-.rig-move #canvasGroup {
-  margin-top: 20px;
-  margin-bottom: 70px;
-}
-
-.rig-move .canvas {
-  border: 2px solid gray;
-  background-color: #F8F7FF;
+.rig-move .scale-selector {
+  position: relative;
+  top: 70px;
+  font-weight:bold;
 }
