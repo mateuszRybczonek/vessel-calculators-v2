@@ -4,7 +4,7 @@ function rigMoveCalculator() {
     templateUrl: "rigMoveCalculator/rigMoveCalculator.html",
     replace: true,
     transclude: false,
-    controller: rigMoveController
+    controller: rigMoveController,
   }
 }
 
@@ -45,7 +45,7 @@ function rigMoveController($scope) {
       value: 0.25,
       step: 0.5,
       slide: function (event, ui) {
-        $("#speed").val(ui.value / 10);
+        $("#speed").val((ui.value / 10).toFixed(2));
         calculate();
       }
     });
@@ -106,6 +106,7 @@ function rigMoveController($scope) {
       $scope.WPTJSON = JSON.parse(lines);
       $('.track-name-input')[0].value = $scope.WPTJSON.trackName;
       $('.projected-speed-input')[0].value = $scope.WPTJSON.projectedSpeed;
+      $("#speed-slider").slider ({value: $scope.WPTJSON.projectedSpeed*10});
       $scope.WPTS = $scope.WPTJSON.WPTS;
       $scope.$apply();
     }
@@ -157,12 +158,16 @@ function rigMoveController($scope) {
     var timeRemaining, hours, minutes, totalDistance;
     var speed = $('.projected-speed-input').val();
 
+    if (rowCount !==0){
+
     legDistanceCalculation();
     distanceDoneCalculation();
     legTimeCalculation();
     remainingTimeCalculation();
     timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent, myTable.rows[0].cells[11]);
     drawing();
+
+    }
 
     function legDistanceCalculation() {
       var eastingDifference, northingDifference, distanceLeg, currentLeg;
