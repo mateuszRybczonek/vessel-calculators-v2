@@ -234,266 +234,16 @@ function rigMoveController($scope) {
     }
   }
 
-  function drawing() {
-    var canvasArray = $('.canvas');
-    var context = canvasArray[0].getContext("2d");
-    var smallCanvas1Context = canvasArray[1].getContext("2d");
-    var smallCanvas2Context = canvasArray[2].getContext("2d");
-    var wptNumber, gridSpaceX, gridSpaceY, row, scale;
-    var minEasting = 0, maxEasting = 0, minNorthing = 0, maxNorthing = 0;
-    var eastingFrame = 0, northingFrame = 0;
-    var centerEasting = 0, centerNorthing = 0;
-    var myTable = $('.tableWPT>tbody')[0];
-    var wptX, wptY, prevWptX, prevWptY;
-
-    clearCanvas(context, canvasArray[0]);
-
-    //DRAW ON MAIN CANVAS (all route)
-    scale = 32;
-    getMinMaxEastingsNorthings();
-    getCenterPoint(maxEasting, minEasting, maxNorthing, minNorthing);
-    roundToNearest500(220, 230);
-    drawCoordinates(context);
-    document.getElementById("eastingFrameCanvas").value = eastingFrame; //create eastingFrame for "getCoordinates.js"
-    document.getElementById("northingFrameCanvas").value = northingFrame; //create northingFrame for "getCoordinates.js"
-
-    for (gridSpaceX = 0; gridSpaceX <= 6; gridSpaceX++) {
-      for (gridSpaceY = 0; gridSpaceY <= 6; gridSpaceY++) {
-        drawGridLines(context); // drawing 'Grid Lines' on the 'chart'
-        drawGridLinesLabels(context); // drawing 'Grid Lines' labels (string)
-      }
-    }
-    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
-      drawSHZ(context);
-      drawWPTAndLabels(context);
-    }
-
-    //DRAW ON SECOND CANVAS (enlargement of start psn)
-    clearCanvas(smallCanvas1Context, canvasArray[1]);
-    scale = 8;
-    centerEasting = myTable.rows[0].cells[3].textContent;
-    centerNorthing = myTable.rows[0].cells[5].textContent;
-
-    eastingFrame = Math.floor(centerEasting - 200 * scale);
-    northingFrame = Math.floor(centerNorthing - (-150 * scale));
-
-    // drawing coordinates (string) on the gridFrame [0,0]
-    drawCoordinates(smallCanvas1Context);
-
-    // drawing 'Grid Lines' on the 'chart' (drawTrackPanel)
-    for (gridSpaceX = 0; gridSpaceX <= 6; gridSpaceX++) {
-      for (gridSpaceY = 0; gridSpaceY <= 6; gridSpaceY++) {
-        drawGridLines(smallCanvas1Context);
-
-        // drawing 'Grid Lines' labels (string)
-        drawGridLinesLabels(smallCanvas1Context);
-      }
-    }
-    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
-      //draw SHZ
-      drawSHZ(smallCanvas1Context);
-      // draw WPT and add label with wptNumber to each WPT
-      drawWPTAndLabels(smallCanvas1Context);
-    }
-
-    //DRAW ON THIRD CANVAS (enlargement of end psn)
-    clearCanvas(smallCanvas2Context, canvasArray[2]);
-    var tableLength = $scope.WPTS.length;
-    scale = 8;
-    centerEasting = $scope.WPTS[Number(tableLength) - 1].easting;
-    centerNorthing = $scope.WPTS[Number(tableLength) - 1].northing;
-
-    eastingFrame = Math.floor(centerEasting - 200 * scale);
-    northingFrame = Math.floor(centerNorthing - (-150 * scale));
-
-    // drawing coordinates (string) on the gridFrame [0,0]
-    drawCoordinates(smallCanvas2Context);
-
-    // drawing 'Grid Lines' on the 'chart' (drawTrackPanel)
-    for (gridSpaceX = 0; gridSpaceX <= 6; gridSpaceX++) {
-      for (gridSpaceY = 0; gridSpaceY <= 6; gridSpaceY++) {
-        drawGridLines(smallCanvas2Context);
-
-        // drawing 'Grid Lines' labels (string)
-        drawGridLinesLabels(smallCanvas2Context);
-      }
-    }
-    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
-      //draw SHZ
-      drawSHZ(smallCanvas2Context);
-      // draw WPT and add label with wptNumber to each WPT
-      drawWPTAndLabels(smallCanvas2Context);
-    }
-
-    function drawGridLines(argument) {
-      argument.beginPath();
-      argument.lineTo(100 * gridSpaceX, 100 * gridSpaceY);
-      argument.lineTo(100 * (6 - gridSpaceX), 100 * gridSpaceY);
-      argument.lineTo(100 * gridSpaceX, 100 * gridSpaceY);
-      argument.lineTo(100 * gridSpaceX, 100 * (6 - gridSpaceY));
-      argument.lineWidth = 0.2;
-      argument.stroke();
-    }
-
-    function getMinMaxEastingsNorthings() {
-      minEasting = getMinEasting();
-      maxEasting = getMaxEasting();
-      minNorthing = getMinNorthing();
-      maxNorthing = getMaxNorthing();
-    }
-
-    function roundToNearest500(arg1, arg2) //create [0,0] grid point on nearest 500 coordinates  (x-shift, y-shift)
-    {
-      eastingFrame = Math.floor((centerEasting - arg1 * scale) / 500) * 500;
-      northingFrame = Math.ceil((centerNorthing + arg2 * scale) / 500) * 500;
-    }
-
-    // to set up a drawing frame correctly (top-left corner as X=minEasting, Y=maxNorthing)
-    function getMinEasting() {
-      minEasting = 1000000;
-      for (row = 0; row < $scope.WPTS.length; row++) {
-        if ($scope.WPTS[row].easting < minEasting) {
-          minEasting = $scope.WPTS[row].easting;
-        }
-      }
-      return minEasting;
-    }
-
-    function getMaxEasting() {
-      maxEasting = 0;
-      for (row = 0; row < $scope.WPTS.length; row++) {
-        if ($scope.WPTS[row].easting > maxEasting) {
-          maxEasting = $scope.WPTS[row].easting;
-        }
-      }
-      return maxEasting;
-    }
-
-    function getMaxNorthing() {
-      maxNorthing = 0;
-      for (row = 0; row < $scope.WPTS.length; row++) {
-        if ($scope.WPTS[row].northing > maxNorthing) {
-          maxNorthing = $scope.WPTS[row].northing;
-        }
-      }
-      return maxNorthing;
-    }
-
-    function getMinNorthing() {
-      minNorthing = 100000000;
-      for (row = 0; row < $scope.WPTS.length; row++) {
-        if ($scope.WPTS[row].northing < minNorthing) {
-          minNorthing = $scope.WPTS[row].northing;
-        }
-      }
-      return minNorthing;
-    }
-
-    function getCenterPoint(xEasting, iEasting, xNorthing, iNorthing) // maxEasting, minEasting, maxNorthing, minNorthing
-    {
-      centerEasting = (Number(xEasting) + Number(iEasting)) / 2;
-      centerNorthing = (Number(xNorthing) + Number(iNorthing)) / 2;
-
-    }
-
-    function drawCoordinates(argument) 	// drawing coordinates (string) on the gridFrame [0,0] (nameOfTheCanvas)
-    {
-      argument.font = "12px Arial";
-      argument.fillText(("E " + (eastingFrame)), 5, 16);
-      argument.fillText(("N " + (northingFrame)), 5, 30);
-    }
-
-    function clearCanvas(contextA, canvasA) // nameOfTheCanvas
-    {
-      contextA.clearRect(0, 0, canvasA.width, canvasA.height);
-    }
-
-    function drawGridLinesLabels(argument) // drawing 'Grid Lines' labels (string) (nameOfTheCanvas)
-    {
-      if (gridSpaceX > 0 && gridSpaceY == 0) {
-        argument.fillText(("E " + (eastingFrame + scale * 100 * gridSpaceX)), 100 * gridSpaceX - 55, 580);
-      }
-      if (gridSpaceX == 0 && gridSpaceY > 0) {
-        argument.fillText(("N " + (northingFrame - scale * 100 * gridSpaceY)), 530, 100 * gridSpaceY - 3);
-      }
-    }
-
-    function drawSHZ(argument)//draw 500m SHZ around WH position(nameOfTheCanvas)
-    {
-      if ($scope.WPTS[wptNumber].name == "WH") {
-        argument.strokeStyle = "black";
-        argument.beginPath();
-        argument.arc((($scope.WPTS[wptNumber].easting - eastingFrame) / scale),
-          ((northingFrame - $scope.WPTS[wptNumber].northing) / scale), 500 / scale, 0, 2 * Math.PI);
-        argument.lineWidth = "1";
-        argument.stroke();
-      }
-      argument.strokeStyle = "red";
-      wptX = (($scope.WPTS[wptNumber].easting) - eastingFrame) / scale;
-      wptY = (northingFrame - ($scope.WPTS[wptNumber].northing)) / scale;
-      if (wptNumber > 0) {
-        argument.beginPath();
-        argument.moveTo(prevWptX, prevWptY);
-        argument.lineTo(wptX, wptY);
-        argument.stroke();
-        argument.strokeStyle = "black";
-      }
-    }
-
-    function drawWPTAndLabels(argument) // draw WPT and add label with wptNumber to each WPT (nameOfTheCanvas)
-    {
-      if ((wptNumber + 1) % 2 == 0) {
-        if ($scope.WPTS[wptNumber].name == "WH") {
-          argument.fillText(wptNumber + 1 + " (WH)", wptX + 3, wptY);
-          argument.beginPath();
-          argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
-        }
-        else if ($scope.WPTS[wptNumber].name == "SHZ") {
-          argument.fillText(wptNumber + 1 + " (SHZ)", wptX + 3, wptY);
-          argument.beginPath();
-          argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
-          argument.stroke();
-        }
-        else {
-          argument.fillText(wptNumber + 1, wptX + 3, wptY);
-          argument.beginPath();
-          argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
-          argument.stroke();
-        }
-
-      }
-      else {
-        if ($scope.WPTS[wptNumber].name == "WH") {
-          argument.fillText(wptNumber + 1 + " (WH)", wptX - 10, wptY);
-          argument.beginPath();
-          argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
-          argument.stroke();
-        }
-        else if ($scope.WPTS[wptNumber].name == "SHZ") {
-          argument.fillText(wptNumber + 1 + " (SHZ)", wptX - 10, wptY);
-          argument.beginPath();
-          argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
-          argument.stroke();
-        }
-        else {
-          argument.fillText(wptNumber + 1, wptX - 10, wptY);
-          argument.beginPath();
-          argument.arc(wptX, wptY, 1, 0, 2 * Math.PI);
-          argument.stroke();
-        }
-      }
-      prevWptX = wptX;
-      prevWptY = wptY;
-    }
-  }
-
   function drawingSVG() {
     var svg = $('svg')[0];
-    var wptNumber, gridSpaceX, gridSpaceY, row, scale;
+
+    while (svg.lastChild) {
+      svg.removeChild(svg.lastChild);
+    }
+    var wptNumber, gridSpaceX, row, scale;
     var minEasting = 0, maxEasting = 0, minNorthing = 0, maxNorthing = 0;
     var eastingFrame = 0, northingFrame = 0;
     var centerEasting = 0, centerNorthing = 0;
-    var myTable = $('.tableWPT>tbody')[0];
     var wptX, wptY, prevWptX, prevWptY;
 
     scale = 32;
@@ -501,14 +251,19 @@ function rigMoveController($scope) {
     getCenterPoint(maxEasting, minEasting, maxNorthing, minNorthing);
     roundToNearest500(220, 230);
 
-    for (gridSpaceX = 0; gridSpaceX <= svg.clientWidth/100+1; gridSpaceX++) {
-        drawGridLines(0,gridSpaceX,(Math.round(svg.clientWidth/100+1)),gridSpaceX); // horizontal grid lines
-        drawGridLines(gridSpaceX,0,gridSpaceX,(Math.round(svg.clientWidth/100+1))); // vertical grid lines
-        drawGridLinesLabels(100 * gridSpaceX - 55,585,"E " + (eastingFrame + scale * 100 * gridSpaceX)); //easting labels
-        drawGridLinesLabels(10,100 * gridSpaceX - 3,"N " + (northingFrame - scale * 100 * gridSpaceX)); //northing labels
-      }
+    for (gridSpaceX = 0; gridSpaceX <= svg.clientWidth / 100 + 1; gridSpaceX++) {
+      // horizontal grid lines
+      drawLine(0, 100 * gridSpaceX, 100 * (Math.round(svg.clientWidth / 100 + 1)), 100 * gridSpaceX, "black", 0.3, 1);
+      // vertical grid lines
+      drawLine(100 * gridSpaceX, 0, 100 * gridSpaceX, 100 * (Math.round(svg.clientWidth / 100 + 1)), "black", 0.3, 1);
+      drawLabel(100 * gridSpaceX - 55, 585, "E " + (eastingFrame + scale * 100 * gridSpaceX)); //easting labels
+      drawLabel(10, 100 * gridSpaceX - 3, "N " + (northingFrame - scale * 100 * gridSpaceX)); //northing labels
+    }
 
-
+    for (wptNumber = 0; wptNumber < $scope.WPTS.length; wptNumber++) {
+      drawSHZandTrack();
+      drawWPTAndLabels();
+    }
 
     function getMinMaxEastingsNorthings() {
       minEasting = getMinEasting();
@@ -571,29 +326,72 @@ function rigMoveController($scope) {
       northingFrame = Math.ceil((centerNorthing + arg2 * scale) / 500) * 500;
     }
 
-    function drawGridLines(startX, startY, endX, endY) {
-      var gridLine = document.createElementNS('http://www.w3.org/2000/svg',"path");
-      gridLine.setAttributeNS(null, "d" ,("M" + 100 * startX + ", " + 100 * startY +
-      " L" + 100 * endX + ", " + 100 * endY));
-      gridLine.setAttributeNS(null, "stroke", "black");
-      gridLine.setAttributeNS(null, "stroke-width", 0.3);
-      gridLine.setAttributeNS(null, "opacity", 1);
+    function drawLine(startX, startY, endX, endY, color, strokeWidth, opacity) {
+      var gridLine = document.createElementNS('http://www.w3.org/2000/svg', "path");
+      gridLine.setAttributeNS(null, "d", ("M" + startX + ", " + startY +
+      " L" + endX + ", " + endY));
+      gridLine.setAttributeNS(null, "stroke", color);
+      gridLine.setAttributeNS(null, "stroke-width", strokeWidth);
+      gridLine.setAttributeNS(null, "opacity", opacity);
       svg.appendChild(gridLine);
     }
 
-    function drawGridLinesLabels(positionX, positionY, value) // drawing 'Grid Lines' labels
+    function drawLabel(positionX, positionY, value) // drawing 'Grid Lines' labels
     {
       var gridLineLabel = document.createElementNS('http://www.w3.org/2000/svg', "text");
-        gridLineLabel.setAttributeNS(null, "x", positionX);
-        gridLineLabel.setAttributeNS(null, "y", positionY);
-        gridLineLabel.setAttributeNS(null, "font", "Arial");
-        gridLineLabel.setAttributeNS(null, "stroke", "black");
-        gridLineLabel.setAttributeNS(null, "font-size", "12px");
-        gridLineLabel.setAttributeNS(null, "font-weight", "normal");
-        gridLineLabel.setAttributeNS(null, "opacity", "0.7");
-        var textNode = document.createTextNode(value);
-        gridLineLabel.appendChild(textNode);
-        svg.appendChild(gridLineLabel);
+      gridLineLabel.setAttributeNS(null, "x", positionX);
+      gridLineLabel.setAttributeNS(null, "y", positionY);
+      gridLineLabel.setAttributeNS(null, "font", "Arial");
+      gridLineLabel.setAttributeNS(null, "stroke", "black");
+      gridLineLabel.setAttributeNS(null, "font-size", "12px");
+      gridLineLabel.setAttributeNS(null, "font-weight", "normal");
+      gridLineLabel.setAttributeNS(null, "opacity", "0.7");
+      var textNode = document.createTextNode(value);
+      gridLineLabel.appendChild(textNode);
+      svg.appendChild(gridLineLabel);
+    }
+
+    function drawCirlce(positionX, positionY, radius) {
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
+      circle.setAttributeNS(null, "cx", positionX);
+      circle.setAttributeNS(null, "cy", positionY);
+      circle.setAttributeNS(null, "r", radius);
+      circle.setAttributeNS(null, "stroke", "black");
+      circle.setAttributeNS(null, "fill", "none");
+      circle.setAttributeNS(null, "stroke-width", "1");
+      svg.appendChild(circle);
+    }
+
+    function drawSHZandTrack() {
+      wptX = (($scope.WPTS[wptNumber].easting) - eastingFrame) / scale;
+      wptY = (northingFrame - ($scope.WPTS[wptNumber].northing)) / scale;
+      if ($scope.WPTS[wptNumber].name == "WH") {
+        drawCirlce(wptX, wptY, 500 / scale);
+        prevWptX = wptX;
+        prevWptY = wptY;
+      }
+      if (wptNumber > 0) {
+        drawLine(prevWptX, prevWptY, wptX, wptY, "red", 0.8, 1);
+        prevWptX = wptX;
+        prevWptY = wptY;
+      }
+    }
+
+    function drawWPTAndLabels() // draw WPT and add label with wptNumber to each WPT
+    {
+      var labelPositionX;
+      var wptName = $scope.WPTS[wptNumber].name;
+      ((wptNumber + 1) % 2 == 0) ? labelPositionX = wptX - 13 : labelPositionX = wptX + 3;
+      if (wptName == "WH" || $scope.WPTS[wptNumber].name == "SHZ") {
+        drawLabel(labelPositionX, wptY - 2, wptNumber + 1 + "(" + wptName + ")");
+        drawCirlce(wptX, wptY, 2)
+      }
+      else {
+        drawLabel(labelPositionX, wptY - 2, wptNumber + 1);
+        drawCirlce(wptX, wptY, 2)
+      }
+      prevWptX = wptX;
+      prevWptY = wptY;
     }
   }
 }
