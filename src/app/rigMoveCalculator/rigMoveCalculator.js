@@ -106,10 +106,11 @@ function rigMoveController($scope) {
       $scope.WPTJSON = JSON.parse(lines);
       $('.track-name-input')[0].value = $scope.WPTJSON.trackName;
       $('.projected-speed-input')[0].value = $scope.WPTJSON.projectedSpeed;
-      $("#speed-slider").slider ({value: $scope.WPTJSON.projectedSpeed*10});
+      $("#speed-slider").slider({value: $scope.WPTJSON.projectedSpeed * 10});
       $scope.WPTS = $scope.WPTJSON.WPTS;
       $scope.$apply();
     }
+
     $scope.$watch('WPTS', function () {
       calculate();
     });
@@ -158,14 +159,15 @@ function rigMoveController($scope) {
     var timeRemaining, hours, minutes, totalDistance;
     var speed = $('.projected-speed-input').val();
 
-    if (rowCount !==0){
+    if (rowCount !== 0) {
 
-    legDistanceCalculation();
-    distanceDoneCalculation();
-    legTimeCalculation();
-    remainingTimeCalculation();
-    timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent, myTable.rows[0].cells[11]);
-    drawing();
+      legDistanceCalculation();
+      distanceDoneCalculation();
+      legTimeCalculation();
+      remainingTimeCalculation();
+      timeRemainingFunc(myTable.rows[rowCount - 1].cells[8].textContent, myTable.rows[0].cells[11]);
+      drawing();
+      drawingSVG();
 
     }
 
@@ -482,6 +484,116 @@ function rigMoveController($scope) {
       }
       prevWptX = wptX;
       prevWptY = wptY;
+    }
+  }
+
+  function drawingSVG() {
+    var svg = $('svg')[0];
+    var wptNumber, gridSpaceX, gridSpaceY, row, scale;
+    var minEasting = 0, maxEasting = 0, minNorthing = 0, maxNorthing = 0;
+    var eastingFrame = 0, northingFrame = 0;
+    var centerEasting = 0, centerNorthing = 0;
+    var myTable = $('.tableWPT>tbody')[0];
+    var wptX, wptY, prevWptX, prevWptY;
+
+    scale = 32;
+    getMinMaxEastingsNorthings();
+    getCenterPoint(maxEasting, minEasting, maxNorthing, minNorthing);
+    roundToNearest500(220, 230);
+
+    for (gridSpaceX = 0; gridSpaceX <= svg.clientWidth/100+1; gridSpaceX++) {
+        drawGridLines(0,gridSpaceX,(Math.round(svg.clientWidth/100+1)),gridSpaceX); // horizontal grid lines
+        drawGridLines(gridSpaceX,0,gridSpaceX,(Math.round(svg.clientWidth/100+1))); // vertical grid lines
+        drawGridLinesLabels(100 * gridSpaceX - 55,585,"E " + (eastingFrame + scale * 100 * gridSpaceX)); //easting labels
+        drawGridLinesLabels(10,100 * gridSpaceX - 3,"N " + (northingFrame - scale * 100 * gridSpaceX)); //northing labels
+      }
+
+
+
+    function getMinMaxEastingsNorthings() {
+      minEasting = getMinEasting();
+      maxEasting = getMaxEasting();
+      minNorthing = getMinNorthing();
+      maxNorthing = getMaxNorthing();
+    }
+
+    // to set up a drawing frame correctly (top-left corner as X=minEasting, Y=maxNorthing)
+    function getMinEasting() {
+      minEasting = 1000000;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].easting < minEasting) {
+          minEasting = $scope.WPTS[row].easting;
+        }
+      }
+      return minEasting;
+    }
+
+    function getMaxEasting() {
+      maxEasting = 0;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].easting > maxEasting) {
+          maxEasting = $scope.WPTS[row].easting;
+        }
+      }
+      return maxEasting;
+    }
+
+    function getMaxNorthing() {
+      maxNorthing = 0;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].northing > maxNorthing) {
+          maxNorthing = $scope.WPTS[row].northing;
+        }
+      }
+      return maxNorthing;
+    }
+
+    function getMinNorthing() {
+      minNorthing = 100000000;
+      for (row = 0; row < $scope.WPTS.length; row++) {
+        if ($scope.WPTS[row].northing < minNorthing) {
+          minNorthing = $scope.WPTS[row].northing;
+        }
+      }
+      return minNorthing;
+    }
+
+    function getCenterPoint(xEasting, iEasting, xNorthing, iNorthing) // maxEasting, minEasting, maxNorthing, minNorthing
+    {
+      centerEasting = (Number(xEasting) + Number(iEasting)) / 2;
+      centerNorthing = (Number(xNorthing) + Number(iNorthing)) / 2;
+
+    }
+
+    function roundToNearest500(arg1, arg2) //create [0,0] grid point on nearest 500 coordinates  (x-shift, y-shift)
+    {
+      eastingFrame = Math.floor((centerEasting - arg1 * scale) / 500) * 500;
+      northingFrame = Math.ceil((centerNorthing + arg2 * scale) / 500) * 500;
+    }
+
+    function drawGridLines(startX, startY, endX, endY) {
+      var gridLine = document.createElementNS('http://www.w3.org/2000/svg',"path");
+      gridLine.setAttributeNS(null, "d" ,("M" + 100 * startX + ", " + 100 * startY +
+      " L" + 100 * endX + ", " + 100 * endY));
+      gridLine.setAttributeNS(null, "stroke", "black");
+      gridLine.setAttributeNS(null, "stroke-width", 0.3);
+      gridLine.setAttributeNS(null, "opacity", 1);
+      svg.appendChild(gridLine);
+    }
+
+    function drawGridLinesLabels(positionX, positionY, value) // drawing 'Grid Lines' labels
+    {
+      var gridLineLabel = document.createElementNS('http://www.w3.org/2000/svg', "text");
+        gridLineLabel.setAttributeNS(null, "x", positionX);
+        gridLineLabel.setAttributeNS(null, "y", positionY);
+        gridLineLabel.setAttributeNS(null, "font", "Arial");
+        gridLineLabel.setAttributeNS(null, "stroke", "black");
+        gridLineLabel.setAttributeNS(null, "font-size", "12px");
+        gridLineLabel.setAttributeNS(null, "font-weight", "normal");
+        gridLineLabel.setAttributeNS(null, "opacity", "0.7");
+        var textNode = document.createTextNode(value);
+        gridLineLabel.appendChild(textNode);
+        svg.appendChild(gridLineLabel);
     }
   }
 }
