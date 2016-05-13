@@ -1,0 +1,3 @@
+function lblArrayPlanningController ($scope){
+
+}

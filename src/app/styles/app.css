@@ -3,7 +3,9 @@ body {
   min-width: 320px;
 }
 
-a {
+a, a:active, a:focus {
+  outline: none;
+  color: #000;
   text-decoration: none;
   display: block;
 }

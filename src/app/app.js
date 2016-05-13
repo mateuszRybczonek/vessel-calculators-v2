@@ -1,8 +1,12 @@
+var app = angular.module('vesselCalculatorsApp',
+  ['ngAnimate', 'ui.bootstrap', 'LocalStorageModule', 'ngRoute']);
+
 (function () {
-  angular.module('vesselCalculatorsApp',
-    ['ngAnimate', 'ui.bootstrap', 'LocalStorageModule'])
+  app
     .directive('mainFrame', mainFrame)
-    .directive('rigMoveCalculator', rigMoveCalculator)
-    .directive('lblArrayPlanning', lblArrayPlanning)
-    .directive('tatVerification', tatVerification);
+    .controller('rigMoveController', rigMoveController)
+    .controller('tatVerificationController', tatVerificationController)
+    .controller('lblArrayPlanningController', lblArrayPlanningController);
 }());
+
+

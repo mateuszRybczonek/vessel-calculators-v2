@@ -1,13 +1,3 @@
-function rigMoveCalculator() {
-  return {
-    restrict: "E",
-    templateUrl: "rigMoveCalculator/rigMoveCalculator.html",
-    replace: true,
-    transclude: false,
-    controller: rigMoveController,
-  }
-}
-
 function rigMoveController($scope) {
   $scope.isCollapsedWaypoint = false;
   $scope.WPTTableHeaders = ['#',
@@ -24,7 +14,7 @@ function rigMoveController($scope) {
   $scope.track = {};
   $scope.selectedIndex = -1;
   $scope.showForms = false;
-  $scope.scale = 32;
+  $scope.scale = 35;
 
   $scope.WPT = WPT;
   $scope.addNewWPT = addNewWPT;
