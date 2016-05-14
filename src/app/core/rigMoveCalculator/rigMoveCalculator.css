@@ -50,6 +50,7 @@
 
 .rig-move .edit-input {
   width: 100px;
+  color: #000;
 }
 
 .rig-move .manipulation-col {
@@ -104,4 +105,19 @@
   position: relative;
   top: 70px;
   font-weight:bold;
+}
+
+.rig-move .selectedRow {
+  background-color: #333;
+  color: #fff;
+}
+
+.rig-move .selectedWPT {
+  stroke: red;
+}
+
+.rig-move .chart-instruction {
+  position: relative;
+  top: 20px;
+  left: 10px;
 }

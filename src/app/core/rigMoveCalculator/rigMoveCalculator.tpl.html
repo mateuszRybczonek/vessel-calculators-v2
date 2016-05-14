@@ -27,7 +27,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="WPT in WPTS track by $index" ng-class="{grey:$even}">
+    <tr ng-repeat="WPT in WPTS track by $index" ng-class="{grey:$even, selectedRow:WPT.index===selectedRow}"
+        ng-click="showSelectedWPT(WPT.index-1)">
       <td class="wpt-index-col">{{WPT.index}}</td>
 
       <td ng-show="!showForms">{{WPT.name}}</td>
@@ -106,9 +107,9 @@
   <div class="scale-selector">
     <span>Scale selector</span>
     <div id="scale-slider"></div>
+    <span class="chart-instruction">Double click on the chart to recenter.</span>
   </div>
-
-  <svg class="track-main-view">
+  <svg class="track-main-view" ng-dblclick="recenterChart($event)">
   </svg>
 
   <footer>

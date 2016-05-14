@@ -1,7 +1,7 @@
 function mainFrame(){
   return {
     restrict: "E",
-    templateUrl: "directives/mainFrame/mainFrame.html",
+    templateUrl: "directives/mainFrame/mainFrame.tpl.html",
     controller: mainController
   }
 }

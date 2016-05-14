@@ -16,17 +16,17 @@
         })
       .when('/rigMoveCalculator',
         {
-          templateUrl: 'core/rigMoveCalculator/rigMoveCalculator.html',
+          templateUrl: 'core/rigMoveCalculator/rigMoveCalculator.tpl.html',
           controller: 'rigMoveController'
         })
       .when('/LBLArrayPlanning',
         {
-          templateUrl: 'core/LBLArrayPlanning/LBLArrayPlanning.html',
+          templateUrl: 'core/LBLArrayPlanning/lblArrayPlanning.tpl.html',
           controller: 'lblArrayPlanningController'
         })
       .when('/TATVerification',
         {
-          templateUrl: 'core/TATVerification/TATVerification.html',
+          templateUrl: 'core/TATVerification/tatVerification.tpl.html',
           controller: 'tatVerificationController'
         })
   });
