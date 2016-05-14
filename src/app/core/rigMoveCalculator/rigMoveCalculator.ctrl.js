@@ -315,14 +315,28 @@ function rigMoveController($scope) {
   //}
 
   function showSelectedWPT(wptNumber) {
-    $scope.selectedRow = wptNumber + 1;
+    var svgCircle = $('circle');
+    svgCircle.each(function () {
+      if(Math.ceil($(this)[0].r.baseVal.value * $scope.scale) !== 500)
+        setSvgWptAtrributes($(this)[0], 1, 'none', 2);
+    });
+    $scope.selectedRow = wptNumber;
+    (Math.ceil(svgCircle[wptNumber].r.baseVal.value * $scope.scale) === 500) ?
+      setSvgWptAtrributes(svgCircle[wptNumber+1], 2, 'yellow', 4) :
+      setSvgWptAtrributes(svgCircle[wptNumber], 2, 'yellow', 4);
+  }
+
+  function setSvgWptAtrributes(element, strokeWidth, fillValue, radius) {
+    element.setAttribute('stroke-width', strokeWidth);
+    element.setAttribute('fill', fillValue);
+    element.setAttribute('r', radius);
   }
 
   function recenterChart(event) {
     centerEasting = Number(centerEasting) - svgArray.width() / 2 * $scope.scale + event.offsetX * $scope.scale;
     centerNorthing = Number(centerNorthing) + svgArray.height() / 2 * $scope.scale - event.offsetY * $scope.scale;
-    minEasting = centerEasting - svgArray.width()/2;
-    maxNorthing = centerNorthing + svgArray.width()/2;
+    minEasting = centerEasting - svgArray.width() / 2;
+    maxNorthing = centerNorthing + svgArray.width() / 2;
     clearSVG();
     roundToNearest500(svgArray.width() / 2, svgArray.height() / 2);
     draw();

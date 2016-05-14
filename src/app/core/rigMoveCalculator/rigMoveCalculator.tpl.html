@@ -28,7 +28,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="WPT in WPTS track by $index" ng-class="{grey:$even, selectedRow:WPT.index===selectedRow}"
-        ng-click="showSelectedWPT(WPT.index-1)">
+        ng-click="showSelectedWPT(WPT.index)">
       <td class="wpt-index-col">{{WPT.index}}</td>
 
       <td ng-show="!showForms">{{WPT.name}}</td>
