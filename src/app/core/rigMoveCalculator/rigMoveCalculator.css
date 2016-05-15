@@ -1,36 +1,7 @@
-.rig-move {
-  margin-top: -30px;
-  margin-bottom: 0;
-}
-
-.rig-move a {
-  color: #FFF;
-}
-
 #speed-slider {
   width: 250px;
   margin-left: 10px;
   margin-bottom: 20px;
-}
-
-.invalid-input-data {
-  background-color: #ffccb5;
-}
-
-.valid-input-data {
-  background-color: #d2ffd4;
-}
-
-.rig-move a:hover {
-  color: #373737
-}
-
-.btn-grey {
-  background-color: #373737;
-  color: #FFF;
-  font-weight: bold;
-  transition: all 500ms ease;
-  margin-top: 10px;
 }
 
 .rig-move .btn-waypoint {
@@ -68,11 +39,6 @@
 
 .rig-move .table-header {
   font-size: 14px;
-}
-
-.rig-move .input-group {
-  margin: 10px;
-  width: 250px;
 }
 
 .rig-move .waypoint-data .input-group {

@@ -1,21 +1,12 @@
-<div class="rig-move panel container-fluid">
+<div class="content rig-move panel container-fluid">
   <header>
     <h1>Rig Move Calculator</h1>
     <div class="col-md-4 col-lg-3">
-      <div class="input-group track-name">
-        <span class="input-group-addon">Track name:</span>
-        <input type="text" size="40" name="trackName"
-               class="form-control track-name-input" placeholder="enter track name">
-      </div>
-      <div class="input-group projected-speed">
-        <span class="input-group-addon">Projected speed:</span>
-        <input type="text" size="4" name="projectedSpeed" id="speed"
-               class="form-control projected-speed-input"
-               placeholder="" value="0.25"
-               ng-pattern="/^[0-9]{1}[.][0-9]{2}/"
-               disabled>
-        <span class="input-group-addon">[kn]</span>
-      </div>
+      <input-element class-name="track-name" span-text="Track name:" input-name="trackName" input-class="track-name-input"
+                     placeholder="enter track name" pattern=""></input-element>
+      <input-element-units class-name="projected-speed" span-text="Projected speed:" input-name="projectedSpeed"
+        input-id="speed" input-class="projected-speed-input" init-value="0.25" pattern="/^[0-9]{1}[.][0-9]{2}/"
+        units="[kn]"></input-element-units>
       <div id="speed-slider"></div>
     </div>
   </header>
@@ -131,6 +122,5 @@
       </div>
       <span class="clear"></span>
     </div>
-
   </footer>
 </div>

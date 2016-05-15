@@ -1,12 +1,35 @@
-.panel-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  padding: 0;
-  width: 100%;
-  z-index: 9;
-  min-height: 60px;
-  border-top: solid 2px gray;
+.content {
+  margin-top: -30px;
+  margin-bottom: 0;
+}
+
+.content a {
+  color: #FFF;
+}
+
+.content a:hover {
+  color: #373737
+}
+
+.content .input-group {
+  margin: 10px;
+  width: 260px;
+}
+
+.content .invalid-input-data {
+  background-color: #ffccb5;
+}
+
+.content .valid-input-data {
+  background-color: #d2ffd4;
+}
+
+.btn-grey {
+  background-color: #373737;
+  color: #FFF;
+  font-weight: bold;
+  transition: all 500ms ease;
+  margin-top: 10px;
 }
 
 input {
@@ -32,4 +55,15 @@ input {
 
 .clear {
   clear: both;
+}
+
+.panel-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  width: 100%;
+  z-index: 9;
+  min-height: 60px;
+  border-top: solid 2px gray;
 }
