@@ -10,10 +10,6 @@
   top: 10px;
 }
 
-.rig-move .grey {
-  background-color: #F8F7FF;
-}
-
 .rig-move .wpt-index-col {
   width: 30px;
   text-align: center;
@@ -37,10 +33,6 @@
   font-weight: bold;
 }
 
-.rig-move .table-header {
-  font-size: 14px;
-}
-
 .rig-move .waypoint-data .input-group {
   margin: 10px 0;
 }
@@ -50,9 +42,7 @@
   width: 300px;
 }
 
-.rig-move .table.tableWPT {
-  width: 100%;
-}
+
 
 .rig-move .manipulation-icon {
   margin-left: 4px;
@@ -71,11 +61,6 @@
   position: relative;
   top: 70px;
   font-weight:bold;
-}
-
-.rig-move .selectedRow {
-  background-color: #333;
-  color: #fff;
 }
 
 .rig-move .selectedWPT {

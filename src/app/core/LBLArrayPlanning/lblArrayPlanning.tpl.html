@@ -2,7 +2,7 @@
   <header>
     <h1>LBL Array Planning</h1>
     <div class="col-md-4 col-lg-3">
-      <input-element class-name="track-name" span-text="Field:" input-name="fieldName" input-class="field-name-input"
+      <input-element class-name="field-name" span-text="Field:" input-name="fieldName" input-class="field-name-input"
                      placeholder="enter field name" pattern="">
       </input-element>
       <input-element class-name="well-name" span-text="Well:" input-name="wellName" input-class="well-name-input"
@@ -13,6 +13,16 @@
       </input-element>
       <input-element class-name="utm-Zone" span-text="UTM Zone" input-name="utmZone" input-class="utm-input"
                      placeholder="" pattern=""></input-element>
+    </div>
+    <div class="col-md-4 col-lg-3">
+      <input-element-units class-name="wh-northing" span-text="WH northing" input-name="whNorthing"
+                           input-id="wh-northing" input-class="wh-northing-input" init-value=""
+                           pattern="/^[0-9]{1-7}/" units="[m]">
+      </input-element-units>
+      <input-element-units class-name="wh-easting" span-text="WH easting" input-name="whEasting"
+                           input-id="wh-easting" input-class="wh-easting-input" init-value=""
+                           pattern="/^[0-9]{1-6}/" units="[m]">
+      </input-element-units>
     </div>
     <div class="col-md-4 col-lg-3 calculation-input-data">
       <input-element-units class-name="water-depth" span-text="Water depth:" input-name="waterDepth"
@@ -44,14 +54,68 @@
                            pattern="/^[0-9]{1-4}/" units="[m]">
       </input-element-units>
     </div>
-
   </header>
+
+  <table class="table tableArray1">
+    <thead>
+    <tr>
+      <th class="table-header" ng-repeat="tableHeader in arrayTableHeaders" scope="col">{{tableHeader}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="beacon in array1 track by $index" ng-class="{grey:$even, selectedRow:beacon.index===selectedRow}"
+        ng-click="showSelectedBeacon(beacon.index)">
+      <td class="wpt-index-col">{{beacon.index}}</td>
+      <td ng-show="!showForms">{{beacon.serialNo}}</td>
+      <td ng-show="showForms">
+        <input class="edit-input" ng-model="beacon.serialNo"
+               required
+               ng-pattern="/^[^<>]*$/"
+               ng-class="beacon.serialNo==='' ? 'invalid-input-data' :
+               ('valid-input-data')"
+        />
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td ng-show="!showForms">{{beacon.floatNo}}</td>
+      <td ng-show="showForms">
+        <input class="edit-input" ng-model="beacon.floatNo"
+               required
+               ng-pattern="/^[^<>]*$/"
+               ng-class="beacon.floatNo==='' ? 'invalid-input-data' :
+               ('valid-input-data')"
+        />
+      </td>
+      <td></td>
+      <td class="selected manipulation-col">
+        <span ng-show="!showForms" class="glyphicon glyphicon-pencil clickable manipulation-icon"
+              ng-click="showForms=true"></span>
+
+        <span ng-show="!$first" ng-click="moveUp($index, array1)"
+              class="glyphicon glyphicon-arrow-up manipulation-icon clickable"></span>
+        <span ng-show="!$last" ng-click="moveDown($index, array1)"
+              class="glyphicon glyphicon-arrow-down manipulation-icon clickable"></span>
+
+        <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-floppy-disk clickable"
+              ng-click="saveChanges($index, beacon.serialNo, beacon.floatNo, array1); showForms=false">
+          <span class="icon-text"> SAVE</span>
+        </span>
+        <span ng-show="!showForms" class="glyphicon glyphicon-remove clickable manipulation-icon right"
+              ng-click="removeRow($index, array1)"></span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <span ng-click="addNewBeacon(array1)" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right"> ADD</span>
+  <span class="clear"></span>
 
 
   <footer>
     <div class="btn-group col-xs-12 panel-footer">
       <div class="col-xs-12">
-        <button ng-click="clearTable()" type="button" class="btn btn-default btn-grey">Clear table</button>
+        <button ng-click="clearTable(array1)" type="button" class="btn btn-default btn-grey">Clear table</button>
 
         <button class="btn btn-default btn-grey import-export" role="menuitem">
           <a href="rigMoveCalculator/external/MAT001-RigMove.json">

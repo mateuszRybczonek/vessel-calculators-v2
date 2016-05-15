@@ -1,5 +1,4 @@
 function rigMoveController($scope) {
-  $scope.isCollapsedWaypoint = false;
   $scope.WPTTableHeaders = ['#',
     'WPT name',
     'Easting [m]',
@@ -9,7 +8,7 @@ function rigMoveController($scope) {
     'Dist. remaining [m]',
     'Time leg',
     'Time remaining',
-    'Selected'];
+    ''];
   $scope.WPTS = [];
   $scope.track = {};
   $scope.selectedIndex = -1;

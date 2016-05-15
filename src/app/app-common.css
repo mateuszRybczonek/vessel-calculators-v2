@@ -16,6 +16,23 @@
   width: 260px;
 }
 
+.content .table {
+  width: 100%;
+}
+
+.content .table-header {
+  font-size: 14px;
+}
+
+.content .grey {
+  background-color: #F8F7FF;
+}
+
+.content .selectedRow {
+  background-color: #333;
+  color: #fff;
+}
+
 .content .invalid-input-data {
   background-color: #ffccb5;
 }
