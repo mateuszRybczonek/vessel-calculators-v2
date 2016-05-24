@@ -32,7 +32,6 @@ function rigMoveController($scope) {
   $scope.saveChanges = saveChanges;
   $scope.moveUp = moveUp;
   $scope.moveDown = moveDown;
-  //$scope.getWPTDetails = getWPTDetails;
   $scope.showSelectedWPT = showSelectedWPT;
   $scope.recenterChart = recenterChart;
 
