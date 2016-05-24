@@ -16,6 +16,8 @@ function lblArrayPlanningController($scope) {
   $scope.selectedRow = -1;
   $scope.scale = 1000;
   $scope.startAngle = 0;
+  $scope.verticalAngle = 10;
+  $scope.angleThreshold = 1;
 
   var distanceWHTP, row;
   var svgHorizontalView = $('.array-horizontal-view')[0];
@@ -36,11 +38,11 @@ function lblArrayPlanningController($scope) {
     $("#scale-slider").slider({
       range: "max",
       min: 0,
-      max: 800,
-      value: 1000 - $scope.scale,
+      max: 2800,
+      value: 3000 - $scope.scale,
       step: 1,
       slide: function (event, ui) {
-        $scope.scale = 1000 - ui.value;
+        $scope.scale = 3000 - ui.value;
         $scope.$apply();
         clearSVG(svgHorizontalView);
         clearSVG(svgVerticalView);
@@ -58,6 +60,42 @@ function lblArrayPlanningController($scope) {
       step: 1,
       slide: function (event, ui) {
         $scope.startAngle = ui.value;
+        $scope.$apply();
+        calculate();
+        clearSVG(svgHorizontalView);
+        clearSVG(svgVerticalView);
+        draw();
+      }
+    });
+  })();
+
+  (function verticalAngleSlider() {
+    $("#vertical-angle-slider").slider({
+      range: "max",
+      min: 1,
+      max: 30,
+      value: $scope.verticalAngle,
+      step: 1,
+      slide: function (event, ui) {
+        $scope.verticalAngle = ui.value;
+        $scope.$apply();
+        calculate();
+        clearSVG(svgHorizontalView);
+        clearSVG(svgVerticalView);
+        draw();
+      }
+    });
+  })();
+
+  (function angleThresholdSlider() {
+    $("#angle-threshold-slider").slider({
+      range: "max",
+      min: 1,
+      max: 5,
+      value: $scope.angleThreshold,
+      step: 1,
+      slide: function (event, ui) {
+        $scope.angleThreshold = ui.value;
         $scope.$apply();
         calculate();
         clearSVG(svgHorizontalView);
@@ -88,8 +126,8 @@ function lblArrayPlanningController($scope) {
     $scope.lblArraysData.waterDepth = $('.water-depth input')[0].value;
     $scope.lblArraysData.transponderHeight = $('.transponder-height input')[0].value;
     $scope.lblArraysData.transducerDepth = $('.transducer-depth input')[0].value;
-    $scope.lblArraysData.startAngle = $('.start-angle input')[0].value;
-    $scope.lblArraysData.verticalAngle = $('.vertical-angle input')[0].value;
+    $scope.lblArraysData.startAngle = $scope.startAngle;
+    $scope.lblArraysData.verticalAngle = $scope.verticalAngle;
     $scope.lblArraysData.array1 = $scope.array1;
     $scope.lblArraysData.array2 = $scope.array2;
     $scope.lblArraysData.angleThreshold = $('.angle-threshold input')[0].value;
@@ -139,8 +177,8 @@ function lblArrayPlanningController($scope) {
       $('.transponder-height-input')[0].value = $scope.beaconsJSON.transponderHeight;
       $('.transducer-depth-input')[0].value = $scope.beaconsJSON.transducerDepth;
       $scope.startAngle = $scope.beaconsJSON.startAngle;
-      $('.vertical-angle-input')[0].value = $scope.beaconsJSON.verticalAngle;
-      $('.angle-threshold-input')[0].value = $scope.beaconsJSON.angleThreshold;
+      $scope.verticalAngle = $scope.beaconsJSON.verticalAngle;
+      $scope.angleThreshold = $scope.beaconsJSON.angleThreshold;
       $scope.array1 = $scope.beaconsJSON.array1;
       $scope.array2 = $scope.beaconsJSON.array2;
       $scope.arrays.push($scope.array1);
@@ -202,20 +240,17 @@ function lblArrayPlanningController($scope) {
   }
 
   function calculate() {
-    var verticalAngle = $('.vertical-angle-input')[0].value;
-
     var relativeDepth = $(".water-depth-input")[0].value
       - $(".transponder-height-input")[0].value
       - $('.transducer-depth-input')[0].value;
     $("#relative-depth")[0].value = relativeDepth;
 
-    distanceWHTP = Math.round(relativeDepth * Math.sin(verticalAngle / (180 / Math.PI)));
+    distanceWHTP = Math.round(relativeDepth * Math.sin($scope.verticalAngle / (180 / Math.PI)));
     $('.dist-WH-TR-input')[0].value = distanceWHTP;
 
-    var angleThreshold = $('.angle-threshold-input')[0].value;
-
-    $('.beacon-radius-input')[0].value = (Math.round(relativeDepth * Math.sin((Number(verticalAngle) + Number(angleThreshold)) / (180 / Math.PI)))
-      - Math.round(relativeDepth * Math.sin((Number(verticalAngle) - Number(angleThreshold)) / (180 / Math.PI)))) / 2;
+    $('.beacon-radius-input')[0].value = (Math.round(relativeDepth * Math.sin((Number($scope.verticalAngle)
+          + Number($scope.angleThreshold)) / (180 / Math.PI)))
+      - Math.round(relativeDepth * Math.sin((Number($scope.verticalAngle) - Number($scope.angleThreshold)) / (180 / Math.PI)))) / 2;
 
     for (row = 0; row < $scope.array1.length; row++) {
       calculateNorthingsAndEastings($('.tableArray1')[0], 0);

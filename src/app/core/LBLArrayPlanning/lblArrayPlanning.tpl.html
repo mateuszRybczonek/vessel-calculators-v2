@@ -43,18 +43,6 @@
                            input-id="relative-depth" input-class="relative-depth-input" init-value=""
                            pattern="/^[0-9]{1-4}/" units="[m]">
       </input-element-units>
-      <input-element-units class-name="dist-WH-TR" span-text="Distance WH &#10230 TR:" input-name="dist-WH-TR"
-                           input-id="dist-WH-TR" input-class="dist-WH-TR-input" init-value=""
-                           pattern="/^[0-9]{1-4}/" units="[m]">
-      </input-element-units>
-      <input-element-units class-name="angle-threshold" span-text="Angle threshold:" input-name="angle-threshold"
-                           input-id="angle-threshold" input-class="angle-threshold-input" init-value=""
-                           pattern="/^[0-9]{1}/" units="[&deg]">
-      </input-element-units>
-      <input-element-units class-name="beacon-radius" span-text="Beacon radius:" input-name="beacon-radius"
-                           input-id="beacon-radius" input-class="beacon-radius-input" init-value=""
-                           pattern="/^[0-9]{1-2}/" units="[m]">
-      </input-element-units>
     </div>
   </header>
   <table class="table tableArray1">
@@ -180,18 +168,29 @@
       <div id="scale-slider"></div>
     </div>
     <div class="col-xs-12 selector start-angle-selector">
-      <span>Start angle: {{startAngle}} &deg</span>
+      <span>Start angle: {{startAngle}}&deg</span>
       <div id="start-angle-slider"></div>
     </div>
     <svg class="left col-xs-12 array-view array-horizontal-view"></svg>
   </div>
   <div class="right col-xs-5">
-    <input-element-units class-name="vertical-angle" span-text="Vertical angle:" input-name="verticalAngle"
-                         input-id="vertical-angle" input-class="vertical-angle-input" init-value=""
-                         pattern="/^[0-9]{1-2}/" units="[&deg]">
-    </input-element-units>
+    <div class="col-xs-12 selector selector-right vertical-angle-selector">
+      <span>Vertical angle: {{verticalAngle}}&deg</span>
+      <div id="vertical-angle-slider"></div>
+      <input-element-units class-name="dist-WH-TR" span-text="Distance WH &#10230 TR:" input-name="dist-WH-TR"
+                           input-id="dist-WH-TR" input-class="dist-WH-TR-input" init-value=""
+                           pattern="/^[0-9]{1-4}/" units="[m]">
+      </input-element-units>
+    </div>
+    <div class="col-xs-12 selector selector-right angle-threshold-selector">
+      <span>Angle threshold: {{angleThreshold}}&deg</span>
+      <div id="angle-threshold-slider"></div>
+      <input-element-units class-name="beacon-radius" span-text="Beacon radius:" input-name="beacon-radius"
+                           input-id="beacon-radius" input-class="beacon-radius-input" init-value=""
+                           pattern="/^[0-9]{1-2}/" units="[m]">
+      </input-element-units>
+    </div>
     <svg class="right col-xs-12 array-view array-vertical-view"></svg>
-
   </div>
 
   <footer>
