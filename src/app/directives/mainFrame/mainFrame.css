@@ -127,9 +127,18 @@
 }
 
 #sidebar-wrapper .button-v1 {
-  position: absolute;
+  position: fixed;
   bottom: 60px;
   left: 10px;
+}
+
+#sidebar-wrapper .v-1-text {
+  position: fixed;
+  bottom: 130px;
+  left: 0;
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 100;
 }
 
 .no-margin {

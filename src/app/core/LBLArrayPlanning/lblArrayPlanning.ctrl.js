@@ -1,4 +1,4 @@
-function lblArrayPlanningController ($scope){
+function lblArrayPlanningController($scope) {
   $scope.arrayTableHeaders = ['#',
     'Serial no.',
     'Northing [m]',
@@ -14,6 +14,8 @@ function lblArrayPlanningController ($scope){
   $scope.showForms = false;
   $scope.lblArraysData = {};
   $scope.selectedRow = -1;
+
+  var distanceWHTP, row;
 
   $scope.addNewBeacon = addNewBeacon;
   $scope.clearTable = clearTable;
@@ -51,6 +53,7 @@ function lblArrayPlanningController ($scope){
     $scope.lblArraysData.verticalAngle = $('.vertical-angle input')[0].value;
     $scope.lblArraysData.array1 = $scope.array1;
     $scope.lblArraysData.array2 = $scope.array2;
+    $scope.lblArraysData.angleThreshold = $('.angle-threshold input')[0].value;
 
     var exportData = JSON.stringify($scope.lblArraysData);
     //create default file name
@@ -84,20 +87,33 @@ function lblArrayPlanningController ($scope){
       fileReader.readAsText(file);
     }
 
-
     function receivedText(e) {
       lines = e.target.result;
-      $scope.WPTJSON = JSON.parse(lines);
-      $('.track-name-input')[0].value = $scope.WPTJSON.trackName;
-      $('.projected-speed-input')[0].value = $scope.WPTJSON.projectedSpeed;
-      $("#speed-slider").slider({value: $scope.WPTJSON.projectedSpeed * 10});
-      $scope.WPTS = $scope.WPTJSON.WPTS;
+      $scope.beaconsJSON = JSON.parse(lines);
+      $('.field-name-input')[0].value = $scope.beaconsJSON.fieldName;
+      $('.well-name-input')[0].value = $scope.beaconsJSON.wellName;
+      $('.date-input')[0].value = $scope.beaconsJSON.date;
+      $('.utm-input')[0].value = $scope.beaconsJSON.utm;
+      $('.wh-northing-input')[0].value = $scope.beaconsJSON.whNorthing;
+      $('.wh-easting-input')[0].value = $scope.beaconsJSON.whEasting;
+      $('.water-depth-input')[0].value = $scope.beaconsJSON.waterDepth;
+      $('.transponder-height-input')[0].value = $scope.beaconsJSON.transponderHeight;
+      $('.transducer-depth-input')[0].value = $scope.beaconsJSON.transducerDepth;
+      $('.start-angle-input')[0].value = $scope.beaconsJSON.startAngle;
+      $('.vertical-angle-input')[0].value = $scope.beaconsJSON.verticalAngle;
+      $('.angle-threshold-input')[0].value = $scope.beaconsJSON.angleThreshold;
+      $scope.array1 = $scope.beaconsJSON.array1;
+      $scope.array2 = $scope.beaconsJSON.array2;
+      $scope.arrays.push($scope.array1);
+      $scope.arrays.push($scope.array2);
       $scope.$apply();
+      disableInputs();
+      calculate();
     }
 
-    $scope.$watch('WPTS', function () {
-      calculate();
-    });
+    //$scope.$watch('arrays', function () {
+    //  calculate();
+    //});
   }
 
   function clearTable(arrayNo) {
@@ -138,4 +154,64 @@ function lblArrayPlanningController ($scope){
   function showSelectedBeacon(beacon) {
     $scope.selectedRow = beacon;
   }
+
+  function disableInputs() {
+    $("#relative-depth")[0].disabled = true;
+    $("#dist-WH-TR")[0].disabled = true;
+    $('#beacon-radius')[0].disabled = true;
+  }
+
+  function calculate() {
+    var verticalAngle = $('.vertical-angle-input')[0].value;
+
+    var relativeDepth = $(".water-depth-input")[0].value
+      - $(".transponder-height-input")[0].value
+      - $('.transducer-depth-input')[0].value;
+    $("#relative-depth")[0].value = relativeDepth;
+
+    distanceWHTP = Math.round(relativeDepth * Math.sin(verticalAngle / (180 / Math.PI)));
+    $('.dist-WH-TR-input')[0].value = distanceWHTP;
+
+    var angleThreshold = $('.angle-threshold-input')[0].value;
+
+    var beaconRadius = (Math.round(relativeDepth * Math.sin((Number(verticalAngle) + Number(angleThreshold)) / (180 / Math.PI)))
+      - Math.round(relativeDepth * Math.sin((Number(verticalAngle) - Number(angleThreshold)) / (180 / Math.PI)))) / 2;
+    $('.beacon-radius-input')[0].value = beaconRadius;
+
+    for (row = 0; row < $scope.array1.length; row++) {
+      calculateNorthingsAndEastings($('.tableArray1')[0], 0);
+    }
+    for (row = 0; row < $scope.array2.length; row++) {
+      calculateNorthingsAndEastings($('.tableArray2')[0], 180 / $scope.array2.length);
+    }
+    //drawing();
+  }
+
+  function calculateNorthingsAndEastings(table, angleShift) {
+    var WHNorthing = $('.wh-northing-input')[0].value;
+    var WHEasting = $('.wh-easting-input')[0].value;
+    table.rows[row+2].cells[5].textContent = distanceWHTP;
+    var bearing = Math.round(angleShift + Number($('.start-angle-input')[0].value) + 360 / table.rows.length * row);
+    table.rows[row+2].cells[6].textContent = bearing;
+    //calculate beacon's northing
+    var deltaNorthing = Math.round(Math.sqrt(distanceWHTP * Math.cos(bearing / (180 / Math.PI))
+      * (distanceWHTP * Math.cos(bearing / (180 / Math.PI)))));
+    if (bearing < 90) {
+      var beaconNorthing = Math.round(Number(WHNorthing) + Number(deltaNorthing));
+    }
+    else {
+      if (bearing < 270) {
+        beaconNorthing = Math.round(Number(WHNorthing) - Number(deltaNorthing));
+      }
+      else {
+        beaconNorthing = Math.round(Number(WHNorthing) + Number(deltaNorthing));
+      }
+    }
+    table.rows[row+2].cells[3].textContent = beaconNorthing;
+    //calculate beacon's easting
+    var deltaEasting = Math.round(distanceWHTP * Math.sin(bearing / (180 / Math.PI)));
+    var beaconEasting = Math.round(Number(WHEasting) + Number(deltaEasting));
+    table.rows[row+2].cells[4].textContent = beaconEasting;
+  }
+
 }

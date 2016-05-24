@@ -53,11 +53,22 @@
                            input-id="dist-WH-TR" input-class="dist-WH-TR-input" init-value=""
                            pattern="/^[0-9]{1-4}/" units="[m]">
       </input-element-units>
+      <input-element-units class-name="angle-threshold" span-text="Angle threshold:" input-name="angle-threshold"
+                           input-id="angle-threshold" input-class="angle-threshold-input" init-value=""
+                           pattern="/^[0-9]{1}/" units="[&deg]">
+      </input-element-units>
+      <input-element-units class-name="beacon-radius" span-text="Beacon radius:" input-name="beacon-radius"
+                           input-id="beacon-radius" input-class="beacon-radius-input" init-value=""
+                           pattern="/^[0-9]{1-2}/" units="[m]">
+      </input-element-units>
     </div>
   </header>
 
   <table class="table tableArray1">
     <thead>
+    <tr>
+      <th>Array 1:</th>
+    </tr>
     <tr>
       <th class="table-header" ng-repeat="tableHeader in arrayTableHeaders" scope="col">{{tableHeader}}</th>
     </tr>
@@ -108,7 +119,67 @@
     </tr>
     </tbody>
   </table>
-  <span ng-click="addNewBeacon(array1)" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right"> ADD</span>
+  <span ng-click="addNewBeacon(array1)" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right">
+    ADD</span>
+  <span class="clear"></span>
+
+  <table class="table tableArray2">
+    <thead>
+    <tr>
+      <th>Array 2:</th>
+    </tr>
+    <tr>
+      <th class="table-header" ng-repeat="tableHeader in arrayTableHeaders" scope="col">{{tableHeader}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="beacon in array2 track by $index" ng-class="{grey:$even, selectedRow:beacon.index===selectedRow}"
+        ng-click="showSelectedBeacon(beacon.index)">
+      <td class="wpt-index-col">{{beacon.index}}</td>
+      <td ng-show="!showForms">{{beacon.serialNo}}</td>
+      <td ng-show="showForms">
+        <input class="edit-input" ng-model="beacon.serialNo"
+               required
+               ng-pattern="/^[^<>]*$/"
+               ng-class="beacon.serialNo==='' ? 'invalid-input-data' :
+               ('valid-input-data')"
+        />
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td ng-show="!showForms">{{beacon.floatNo}}</td>
+      <td ng-show="showForms">
+        <input class="edit-input" ng-model="beacon.floatNo"
+               required
+               ng-pattern="/^[^<>]*$/"
+               ng-class="beacon.floatNo==='' ? 'invalid-input-data' :
+               ('valid-input-data')"
+        />
+      </td>
+      <td></td>
+      <td class="selected manipulation-col">
+        <span ng-show="!showForms" class="glyphicon glyphicon-pencil clickable manipulation-icon"
+              ng-click="showForms=true"></span>
+
+        <span ng-show="!$first" ng-click="moveUp($index, array2)"
+              class="glyphicon glyphicon-arrow-up manipulation-icon clickable"></span>
+        <span ng-show="!$last" ng-click="moveDown($index, array2)"
+              class="glyphicon glyphicon-arrow-down manipulation-icon clickable"></span>
+
+        <span ng-show="showForms" showForms="false" class="glyphicon glyphicon-floppy-disk clickable"
+              ng-click="saveChanges($index, beacon.serialNo, beacon.floatNo, array2); showForms=false">
+          <span class="icon-text"> SAVE</span>
+        </span>
+        <span ng-show="!showForms" class="glyphicon glyphicon-remove clickable manipulation-icon right"
+              ng-click="removeRow($index, array2)"></span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <span ng-click="addNewBeacon(array2)" class="glyphicon glyphicon-plus clickable add-new-row-icon icon-text right">
+    ADD</span>
   <span class="clear"></span>
 
 
@@ -118,7 +189,7 @@
         <button ng-click="clearTable(array1)" type="button" class="btn btn-default btn-grey">Clear table</button>
 
         <button class="btn btn-default btn-grey import-export" role="menuitem">
-          <a href="rigMoveCalculator/external/MAT001-RigMove.json">
+          <a href="core/LBLArrayPlanning/external/MAT-003-LBL-Config.json">
             Download demo.json
           </a>
         </button>
