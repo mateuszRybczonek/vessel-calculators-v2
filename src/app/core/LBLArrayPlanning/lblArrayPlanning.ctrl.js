@@ -44,9 +44,7 @@ function lblArrayPlanningController($scope) {
       slide: function (event, ui) {
         $scope.scale = 3000 - ui.value;
         $scope.$apply();
-        clearSVG(svgHorizontalView);
-        clearSVG(svgVerticalView);
-        draw();
+        drawingSVG();
       }
     });
   })();
@@ -62,9 +60,7 @@ function lblArrayPlanningController($scope) {
         $scope.startAngle = ui.value;
         $scope.$apply();
         calculate();
-        clearSVG(svgHorizontalView);
-        clearSVG(svgVerticalView);
-        draw();
+        drawingSVG();
       }
     });
   })();
@@ -80,9 +76,7 @@ function lblArrayPlanningController($scope) {
         $scope.verticalAngle = ui.value;
         $scope.$apply();
         calculate();
-        clearSVG(svgHorizontalView);
-        clearSVG(svgVerticalView);
-        draw();
+        drawingSVG();
       }
     });
   })();
@@ -98,9 +92,7 @@ function lblArrayPlanningController($scope) {
         $scope.angleThreshold = ui.value;
         $scope.$apply();
         calculate();
-        clearSVG(svgHorizontalView);
-        clearSVG(svgVerticalView);
-        draw();
+        drawingSVG();
       }
     });
   })();
@@ -130,7 +122,7 @@ function lblArrayPlanningController($scope) {
     $scope.lblArraysData.verticalAngle = $scope.verticalAngle;
     $scope.lblArraysData.array1 = $scope.array1;
     $scope.lblArraysData.array2 = $scope.array2;
-    $scope.lblArraysData.angleThreshold = $('.angle-threshold input')[0].value;
+    $scope.lblArraysData.angleThreshold = $scope.angleThreshold;
 
     var exportData = JSON.stringify($scope.lblArraysData);
     //create default file name
@@ -206,9 +198,7 @@ function lblArrayPlanningController($scope) {
     $scope.arrayNo.map(function (WPT, index) {
       WPT.index = index + 1;
     });
-    $scope.$watch('array1', function () {
-      calculate();
-    });
+    calculate();
   }
 
   function moveRow(start, end, arrayNo) {
@@ -229,8 +219,8 @@ function lblArrayPlanningController($scope) {
     moveRow(index, index + 1, arrayNo);
   }
 
-  function showSelectedBeacon(beacon) {
-    $scope.selectedRow = beacon;
+  function showSelectedBeacon(serialNo) {
+    $scope.selectedRow = serialNo;
   }
 
   function disableInputs() {
@@ -268,7 +258,7 @@ function lblArrayPlanningController($scope) {
     var bearing = Math.round(angleShift + Number($scope.startAngle) + 360 / (table.rows.length - 2) * row);
     table.rows[row + 2].cells[6].textContent = bearing;
     //calculate beacon's northing
-    var deltaNorthing = Math.round(Math.sqrt(distanceWHTP * Math.cos((bearing)/ (180 / Math.PI))
+    var deltaNorthing = Math.round(Math.sqrt(distanceWHTP * Math.cos((bearing) / (180 / Math.PI))
       * (distanceWHTP * Math.cos(bearing / (180 / Math.PI)))));
     if (bearing < 90) {
       var beaconNorthing = Math.round(Number(WHNorthing) + Number(deltaNorthing));
@@ -288,154 +278,189 @@ function lblArrayPlanningController($scope) {
     drawingSVG();
   }
 
+  function drawingSVG() {
+    drawHorizontalPlane();
+    drawVerticalPlane();
+  }
+
+  function drawHorizontalPlane() {
+    clearSVG(svgHorizontalView);
+    distanceWHTP = $('.dist-WH-TR-input')[0].value;
+    drawBeaconsHorizontal($('.tableArray1')[0], "red");
+    drawBeaconsHorizontal($('.tableArray2')[0], "blue");
+    drawRadiusHorizontal();
+    drawVesselShapeHorizontal(svgHorizontalView);
+    drawLabelsHorizontal();
+  }
+
+  function drawVerticalPlane() {
+    clearSVG(svgVerticalView);
+    drawVerticalWaterAndBottom(svgVerticalView);
+    drawVesselShapeVertical(svgVerticalView);
+    drawFrameVertical(svgVerticalView);
+    drawLabelsVertical(svgVerticalView);
+  }
+
+  function drawVesselShapeVertical(svg) {
+    var vesselShape = document.createElementNS('http://www.w3.org/2000/svg', "path");
+    vesselShape.setAttributeNS(null, "d", (
+    "M170 95 " +
+    "L180 105" +
+    "L225, 105" +
+    "Q230,105 230,95" +
+    "L170 95 Z"));
+    vesselShape.setAttributeNS(null, "stroke", "black");
+    vesselShape.setAttributeNS(null, "stroke-width", 1);
+    vesselShape.setAttributeNS(null, "opacity", 0.4);
+    svg.appendChild(vesselShape);
+  }
+
+  function drawFrameVertical(svg) {
+    drawLine(svg, 200, 105, 200, 360, "#000", 2, 1);
+    drawRectangle(svg, 197, 360, 6, 9, "black", 0.8, "yellow", 1);
+    drawRectangle(svg, 198, 105, 4, 6, "black", 0.8, "yellow", 1);
+    var tanAngle = Math.tan($scope.verticalAngle / (180 / Math.PI));
+    drawLine(svg, 30, 111, 30, 365, "#000", 1, 0.8);
+    drawLine(svg, 25, 111, 200, 111, "#000", 1, 0.8, 3, 10);
+    drawLine(svg, 200 - tanAngle * 254, 365, 25, 365, "#000", 1, 0.8, 3, 10);
+    drawLine(svg, 200 - tanAngle * 254, 365, 200, 111, "#000", 1, 0.8);
+    drawLine(svg, 200 + tanAngle * 254, 365, 200, 111, "#000", 1, 0.8);
+    drawRectangle(svgVerticalView, 199 + tanAngle * 254, 365, 2, 5, "red", 1, "red", 1);
+    drawRectangle(svgVerticalView, 199 - tanAngle * 254, 365, 2, 5, "red", 1, "red", 1);
+    drawLine(svgVerticalView, 200, 388, 200 - tanAngle * 254, 388, "#000", 1, 0.8);
+    drawLine(svgVerticalView, 200, 385, 200, 391, "#000", 1, 0.8);
+    drawLine(svgVerticalView, 200 - tanAngle * 254, 385, 200 - tanAngle * 254, 391, "#000", 1, 0.8);
+    var anglePath = document.createElementNS('http://www.w3.org/2000/svg', "path");
+    anglePath.setAttributeNS(null, "d", (
+    "M200 232 " +
+    "Q" + (200 + tanAngle * 254 / 4) + ",238 " + (198 + tanAngle * 254 / 2) + ",230"));
+    anglePath.setAttributeNS(null, "stroke", "black");
+    anglePath.setAttributeNS(null, "stroke-width", 1);
+    anglePath.setAttributeNS(null, "opacity", 0.4);
+    anglePath.setAttributeNS(null, "fill", "transparent");
+    svg.appendChild(anglePath);
+  }
+
+  function drawLabelsVertical(svg){
+
+  }
+
+  //canvasContext.fillText(angle+'°',200+tanAngle*254/4,250);
+  //
+  //canvasContext.fillText( "Relative water depth = "+document.getElementById("relativeDepth").value+" m", 235, -380 );
+  //
+  //canvasContext.fillText("WH",190,382);
+  //canvasContext.fillStyle='blue';
+  //canvasContext.fillText("Water plane",10,110);
+  //canvasContext.fillStyle='#A26530';
+  //canvasContext.fillText("Bottom",10,382);
+
+  function drawVerticalWaterAndBottom(svg) {
+    drawLine(svg, -20, 100, 1000, 100, 'blue', 2, 1);
+    var water = document.createElementNS('http://www.w3.org/2000/svg', "path");
+    water.setAttributeNS(null, "d", (
+    "M-20 100 " +
+    "L1000 100 " +
+    "L1000 370 " +
+    "L-20 370 Z"));
+    water.setAttributeNS(null, "opacity", 0.1);
+    water.setAttributeNS(null, "fill", "#92DEF7");
+    svg.appendChild(water);
+    drawLine(svg, -20, 370, 1000, 370, 'brown', 2, 1);
+    var bottom = document.createElementNS('http://www.w3.org/2000/svg', "path");
+    bottom.setAttributeNS(null, "d", (
+    "M-20 370 " +
+    "L1000 370 " +
+    "L1000 405 " +
+    "L-20 405 Z"));
+    bottom.setAttributeNS(null, "opacity", 1);
+    bottom.setAttributeNS(null, "fill", "#E6CAAA");
+    svg.appendChild(bottom);
+  }
+
   function clearSVG(svg) {
     while (svg.lastChild) {
       svg.removeChild(svg.lastChild);
     }
   }
 
-  function draw() {
-    drawBeacons($('.tableArray1')[0], "red");
-    drawBeacons($('.tableArray2')[0], "blue");
-  }
-
-  function drawBeacons(table, color) {
+  function drawBeaconsHorizontal(table, color) {
     var WHEasting = $('.wh-easting-input')[0].value;
     var WHNorthing = $('.wh-northing-input')[0].value;
     var numberOfBeacons = table.rows.length;
     for (var beaconNumber = 2; beaconNumber < numberOfBeacons; beaconNumber++) {
       var relativeEasting = Number(WHEasting) - table.rows[beaconNumber].cells[4].textContent;
       var relativeNorthing = Number(WHNorthing) - table.rows[beaconNumber].cells[3].textContent;
-      drawCircle((relativeEasting / $scope.scale * 400) + 200,
-        (relativeNorthing / $scope.scale * 400) + 200, 3, svgHorizontalView, color);
+      drawCircle(svgHorizontalView, (relativeEasting / $scope.scale * 400) + 200,
+        (relativeNorthing / $scope.scale * 400) + 200, 3, color);
+      drawLine(svgHorizontalView, 200, 200,
+        (relativeEasting / $scope.scale * 400) + 200, (relativeNorthing / $scope.scale * 400) + 200, color, 1, 1);
+      drawLabel(svgHorizontalView, relativeEasting / $scope.scale * 400 + 205, relativeNorthing / $scope.scale * 400 + 195,
+        table.rows[beaconNumber].cells[1].textContent, color);
+      drawCircle(svgHorizontalView, (relativeEasting / $scope.scale * 400) + 200,
+        (relativeNorthing / $scope.scale * 400) + 200, $('.beacon-radius-input')[0].value / $scope.scale * 400, color, "3,3", 0.5);
     }
   }
 
-  function drawBeaco(canvasContext, array) {
-
-    //draw beacons
-    canvasContext.beginPath();
-    canvasContext.arc((relativeEasting / scale) + 200, (relativeNorthing / scale) + 200, 3, 0, 2 * Math.PI);
-    canvasContext.closePath();
-    canvasContext.setLineDash([]);
-    canvasContext.strokeStyle = '#000';
-    if (array == array1) {
-      color = 'red';
-    }
-    else {
-      color = 'blue';
-    }
-    canvasContext.fillStyle = color;
-    canvasContext.stroke();
-    canvasContext.fill();
-
-    //draw signal paths
-    canvasContext.beginPath();
-    canvasContext.moveTo(200, 200);
-    canvasContext.lineTo((relativeEasting / scale) + 200, (relativeNorthing / scale) + 200, 4, 0, 2 * Math.PI);
-    canvasContext.strokeStyle = color;
-    canvasContext.setLineDash([3, 2]);
-    canvasContext.stroke();
-
-    //draw beacon's labels
-    if (row < rowCount) {
-      canvasContext.font = "10px Arial";
-      canvasContext.fillText((array.rows[row].cells[1].textContent), (relativeEasting / scale) + 205, (relativeNorthing / scale) + 195);
-    }
-
-    //draw beacons radius
-    canvasContext.beginPath();
-    canvasContext.arc((relativeEasting / scale) + 200, (relativeNorthing / scale) + 200, beaconsRadius / scale, 0, 2 * Math.PI);
-    canvasContext.closePath();
-    canvasContext.setLineDash([]);
-    canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
-    if (array == array1) {
-      color = 'red';
-    }
-    else {
-      color = 'blue';
-    }
-    canvasContext.fillStyle = "rgba(0, 0, 0, 0.1)";
-
-    canvasContext.stroke();
-    canvasContext.fill();
-
-    //draw vessel's shape
-    canvasContext.beginPath();
-    canvasContext.arc(200, 200, 4, 0, 2 * Math.PI);
-    canvasContext.moveTo(190, 180);
-    canvasContext.quadraticCurveTo(200, 160, 210, 180);
-    canvasContext.lineTo(210, 230);
-    canvasContext.lineTo(190, 230);
-    canvasContext.lineTo(190, 180);
-    canvasContext.closePath();
-    canvasContext.setLineDash([]);
-    canvasContext.strokeStyle = "black";
-    canvasContext.stroke();
-
-    //draw 500m and 1000m circles
-    canvasContext.beginPath();
-    canvasContext.moveTo(200 + 500 / scale, 200);
-    canvasContext.setLineDash([1, 3]);
-    canvasContext.arc(200, 200, 500 / scale, 0, 2 * Math.PI);
-    canvasContext.moveTo(200 + 1000 / scale, 200);
-    canvasContext.arc(200, 200, 1000 / scale, 0, 2 * Math.PI);
-    canvasContext.closePath();
-    canvasContext.stroke();
-    canvasContext.font = "10px Arial";
-    canvasContext.fillStyle = '#000';
-    canvasContext.fillText("500 m", 185, 200 - 530 / scale);
-    canvasContext.fillText("1000 m", 185, 200 - 1030 / scale);
-
-    //draw distWHTransponder circle
-    canvasContext.beginPath();
-    canvasContext.moveTo(200 + distWHTransponder / scale, 200);
-    canvasContext.setLineDash([1, 3]);
-    canvasContext.arc(200, 200, distWHTransponder / scale, 0, 2 * Math.PI);
-    canvasContext.closePath();
-    canvasContext.stroke();
-    canvasContext.fillStyle = '#000';
-    canvasContext.fillText(distWHTransponder + " m", 240, 200 - distWHTransponder / scale);
-
-
-    canvasContext.fillText("- Beacon's radius (" + document.getElementById("angleThreshold").value + " deg threshold) = " + beaconsRadius + " m", 50, 385);
-
-    canvasContext.beginPath();
-    canvasContext.arc(20, 380, beaconsRadius / scale, 0, 2 * Math.PI);
-    canvasContext.closePath();
-    canvasContext.setLineDash([]);
-    canvasContext.strokeStyle = "rgba(0, 0, 0, 0.5)";
-    canvasContext.stroke();
-    canvasContext.fillStyle = "rgba(0, 0, 0, 0.1)";
-    canvasContext.fill();
-
-    canvasContext.fillStyle = '#000';
-    canvasContext.strokeStyle = "#000";
+  function drawLabelsHorizontal() {
+    drawLabel(svgHorizontalView, 190, 190 - 500 / $scope.scale * 400, "500 m");
+    drawLabel(svgHorizontalView, 190, 190 - 1000 / $scope.scale * 400, "1000 m");
+    drawLabel(svgHorizontalView, 190, 220 + distanceWHTP / $scope.scale * 400, distanceWHTP + " m");
+    drawLabel(svgHorizontalView, 50, 375, "Beacon's radius @ " + $scope.angleThreshold + "deg threshold = "
+      + $('.beacon-radius-input')[0].value + " m", "red");
   }
 
-  function drawingSVG() {
-    clearSVG(svgHorizontalView);
-    clearSVG(svgVerticalView);
-    draw();
+  function drawVesselShapeHorizontal(svg) {
+    var vesselShape = document.createElementNS('http://www.w3.org/2000/svg', "path");
+    vesselShape.setAttributeNS(null, "d", (
+    "M190 180 " +
+    "Q200,160 210,180" +
+    "L210 230 " +
+    "L190 230 " +
+    "L190 180 Z"));
+    vesselShape.setAttributeNS(null, "stroke", "black");
+    vesselShape.setAttributeNS(null, "stroke-width", 1);
+    vesselShape.setAttributeNS(null, "opacity", 0.4);
+    svg.appendChild(vesselShape);
   }
 
+  function drawRadiusHorizontal() {
+    drawCircle(svgHorizontalView, 200, 200, 500 / $scope.scale * 400, "black", "5,5", 0.3);
+    drawCircle(svgHorizontalView, 200, 200, 1000 / $scope.scale * 400, "black", "5,5", 0.3);
+    drawCircle(svgHorizontalView, 200, 200, distanceWHTP / $scope.scale * 400, "black", "3,7", 0.7);
+    drawCircle(svgHorizontalView, 20, 370, $('.beacon-radius-input')[0].value / $scope.scale * 400, "red", "3,3", 0.5);
+  }
 
-  function drawLine(startX, startY, endX, endY, color, strokeWidth, opacity) {
+  function drawLine(svg, startX, startY, endX, endY, color, strokeWidth, opacity, dash) {
     var gridLine = document.createElementNS('http://www.w3.org/2000/svg', "path");
     gridLine.setAttributeNS(null, "d", ("M" + startX + ", " + startY +
     " L" + endX + ", " + endY));
     gridLine.setAttributeNS(null, "stroke", color);
     gridLine.setAttributeNS(null, "stroke-width", strokeWidth);
     gridLine.setAttributeNS(null, "opacity", opacity);
+    gridLine.setAttributeNS(null, "stroke-dasharray", dash);
     svg.appendChild(gridLine);
   }
 
-  function drawLabel(positionX, positionY, value) {
+  function drawRectangle(svg, x, y, width, height, color, strokeWidth, fill, opacity) {
+    var rectangle = document.createElementNS('http://www.w3.org/2000/svg', "rect");
+    rectangle.setAttributeNS(null, "x", x);
+    rectangle.setAttributeNS(null, "y", y);
+    rectangle.setAttributeNS(null, "width", width);
+    rectangle.setAttributeNS(null, "height", height);
+    rectangle.setAttributeNS(null, "stroke", color);
+    rectangle.setAttributeNS(null, "stroke-width", strokeWidth);
+    rectangle.setAttributeNS(null, "fill", fill);
+    rectangle.setAttributeNS(null, "opacity", opacity);
+    svg.appendChild(rectangle);
+  }
+
+  function drawLabel(svg, positionX, positionY, value, color) {
     var gridLineLabel = document.createElementNS('http://www.w3.org/2000/svg', "text");
     gridLineLabel.setAttributeNS(null, "x", positionX);
     gridLineLabel.setAttributeNS(null, "y", positionY);
     gridLineLabel.setAttributeNS(null, "font", "Arial");
-    gridLineLabel.setAttributeNS(null, "stroke", "black");
+    gridLineLabel.setAttributeNS(null, "stroke", color);
     gridLineLabel.setAttributeNS(null, "font-size", "12px");
     gridLineLabel.setAttributeNS(null, "font-weight", "normal");
     gridLineLabel.setAttributeNS(null, "opacity", "0.7");
@@ -444,7 +469,7 @@ function lblArrayPlanningController($scope) {
     svg.appendChild(gridLineLabel);
   }
 
-  function drawCircle(positionX, positionY, radius, svg, color) {
+  function drawCircle(svg, positionX, positionY, radius, color, dash, opacity) {
     var circle = document.createElementNS('http://www.w3.org/2000/svg', "circle");
     circle.setAttributeNS(null, "cx", positionX);
     circle.setAttributeNS(null, "cy", positionY);
@@ -452,6 +477,8 @@ function lblArrayPlanningController($scope) {
     circle.setAttributeNS(null, "stroke", color);
     circle.setAttributeNS(null, "fill", "none");
     circle.setAttributeNS(null, "stroke-width", "1");
+    circle.setAttributeNS(null, "stroke-dasharray", dash);
+    circle.setAttributeNS(null, "opacity", opacity);
     svg.appendChild(circle);
   }
 }

@@ -55,8 +55,8 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="beacon in array1 track by $index" ng-class="{grey:$even, selectedRow:beacon.index===selectedRow}"
-        ng-click="showSelectedBeacon(beacon.index)">
+    <tr ng-repeat="beacon in array1 track by $index" ng-class="{grey:$even, selectedRow:beacon.serialNo===selectedRow}"
+        ng-click="showSelectedBeacon(beacon.serialNo)">
       <td class="wpt-index-col">{{beacon.index}}</td>
       <td ng-show="!showForms">{{beacon.serialNo}}</td>
       <td ng-show="showForms">
@@ -173,7 +173,7 @@
     </div>
     <svg class="left col-xs-12 array-view array-horizontal-view"></svg>
   </div>
-  <div class="right col-xs-5">
+  <div class="right col-xs-5 vertical-svg-container">
     <div class="col-xs-12 selector selector-right vertical-angle-selector">
       <span>Vertical angle: {{verticalAngle}}&deg</span>
       <div id="vertical-angle-slider"></div>
