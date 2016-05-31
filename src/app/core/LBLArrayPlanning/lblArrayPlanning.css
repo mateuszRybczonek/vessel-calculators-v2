@@ -21,3 +21,7 @@
 .lbl-array-planning .start-angle-selector {
   margin: 84px 0 54px 25px;
 }
+
+.rotateZ90 {
+  transform: rotate(90deg);
+}

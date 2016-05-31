@@ -326,6 +326,7 @@ function lblArrayPlanningController($scope) {
     drawLine(svg, 200 - tanAngle * 254, 365, 200, 111, "#000", 1, 0.8);
     drawLine(svg, 200 + tanAngle * 254, 365, 200, 111, "#000", 1, 0.8);
     drawRectangle(svgVerticalView, 199 + tanAngle * 254, 365, 2, 5, "red", 1, "red", 1);
+    drawLabel(svgVerticalView, 199 - tanAngle * 200, 382, distanceWHTP +" m", "#000");
     drawRectangle(svgVerticalView, 199 - tanAngle * 254, 365, 2, 5, "red", 1, "red", 1);
     drawLine(svgVerticalView, 200, 388, 200 - tanAngle * 254, 388, "#000", 1, 0.8);
     drawLine(svgVerticalView, 200, 385, 200, 391, "#000", 1, 0.8);
@@ -341,19 +342,13 @@ function lblArrayPlanningController($scope) {
     svg.appendChild(anglePath);
   }
 
-  function drawLabelsVertical(svg){
-
+  function drawLabelsVertical(svg) {
+    drawLabel(svgVerticalView, 40, 240, "Relative depth = " + $('#relative-depth')[0].value + "m", "blue");
+    drawLabel(svgVerticalView, 210, 260, $scope.verticalAngle+ "°", "#000");
+    drawLabel(svgVerticalView, 190, 382, "WH", "#000");
+    drawLabel(svgVerticalView, 10, 95, "Water plane", "blue");
+    drawLabel(svgVerticalView, 10, 382, "Bottom", "brown");
   }
-
-  //canvasContext.fillText(angle+'°',200+tanAngle*254/4,250);
-  //
-  //canvasContext.fillText( "Relative water depth = "+document.getElementById("relativeDepth").value+" m", 235, -380 );
-  //
-  //canvasContext.fillText("WH",190,382);
-  //canvasContext.fillStyle='blue';
-  //canvasContext.fillText("Water plane",10,110);
-  //canvasContext.fillStyle='#A26530';
-  //canvasContext.fillText("Bottom",10,382);
 
   function drawVerticalWaterAndBottom(svg) {
     drawLine(svg, -20, 100, 1000, 100, 'blue', 2, 1);
