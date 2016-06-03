@@ -178,6 +178,7 @@ function lblArrayPlanningController($scope) {
       $scope.$apply();
       disableInputs();
       calculate();
+      drawingSVG();
     }
   }
 
@@ -190,15 +191,21 @@ function lblArrayPlanningController($scope) {
     $scope.arrayNo = arrayNo;
     $scope.arrayNo[index] = {'index': index + 1, 'serialNo': serialNo, 'floatNo': floatNo};
     calculate();
+    drawingSVG();
   }
 
   function removeRow(selectedIndex, arrayNo) {
     $scope.arrayNo = arrayNo;
     $scope.arrayNo.splice(selectedIndex, 1);
-    $scope.arrayNo.map(function (WPT, index) {
-      WPT.index = index + 1;
+    $scope.arrayNo.map(function (beacon, index) {
+      beacon.index = index + 1;
     });
+    //$scope.$watch('arrayNo', function () {
+    //  calculate();
+    //  drawingSVG()
+    //});
     calculate();
+    drawingSVG();
   }
 
   function moveRow(start, end, arrayNo) {
@@ -209,6 +216,7 @@ function lblArrayPlanningController($scope) {
     $scope.arrayNo[start].index = start + 1;
     $scope.arrayNo[end].index = end + 1;
     calculate();
+    drawingSVG();
   }
 
   function moveUp(index, arrayNo) {
@@ -248,7 +256,6 @@ function lblArrayPlanningController($scope) {
     for (row = 0; row < $scope.array2.length; row++) {
       calculateNorthingsAndEastings($('.tableArray2')[0], 180 / $scope.array2.length);
     }
-    drawingSVG();
   }
 
   function calculateNorthingsAndEastings(table, angleShift) {
@@ -326,7 +333,7 @@ function lblArrayPlanningController($scope) {
     drawLine(svg, 200 - tanAngle * 254, 365, 200, 111, "#000", 1, 0.8);
     drawLine(svg, 200 + tanAngle * 254, 365, 200, 111, "#000", 1, 0.8);
     drawRectangle(svgVerticalView, 199 + tanAngle * 254, 365, 2, 5, "red", 1, "red", 1);
-    drawLabel(svgVerticalView, 199 - tanAngle * 200, 382, distanceWHTP +" m", "#000");
+    drawLabel(svgVerticalView, 199 - tanAngle * 200, 382, distanceWHTP + " m", "#000");
     drawRectangle(svgVerticalView, 199 - tanAngle * 254, 365, 2, 5, "red", 1, "red", 1);
     drawLine(svgVerticalView, 200, 388, 200 - tanAngle * 254, 388, "#000", 1, 0.8);
     drawLine(svgVerticalView, 200, 385, 200, 391, "#000", 1, 0.8);
@@ -344,7 +351,7 @@ function lblArrayPlanningController($scope) {
 
   function drawLabelsVertical(svg) {
     drawLabel(svgVerticalView, 40, 240, "Relative depth = " + $('#relative-depth')[0].value + "m", "blue");
-    drawLabel(svgVerticalView, 210, 260, $scope.verticalAngle+ "°", "#000");
+    drawLabel(svgVerticalView, 210, 260, $scope.verticalAngle + "°", "#000");
     drawLabel(svgVerticalView, 190, 382, "WH", "#000");
     drawLabel(svgVerticalView, 10, 95, "Water plane", "blue");
     drawLabel(svgVerticalView, 10, 382, "Bottom", "brown");
